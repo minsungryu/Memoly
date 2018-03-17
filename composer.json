@@ -1,0 +1,14 @@
+{
+    "name": "minsungryu/memoly",
+    "description": "NHN godo 3기 개발과제",
+    "type": "project",
+    "require": {
+        "vlucas/phpdotenv": "^2.4"
+    },
+    "authors": [
+        {
+            "name": "minsungryu",
+            "email": "ryums0227@gmail.com"
+        }
+    ]
+}
