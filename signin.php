@@ -14,6 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='shortcut icon' type='image/ico' href='public/img/favicon.ico'>
     <title>Memoly</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
@@ -28,7 +29,7 @@
 </head>
 <body>
 <div class="signin-box">
-    <h1 class="text-center mt-3 mb-5">Memoly</h1>
+    <img src="public/img/memoly.png" class="mb-5">
     <form action="user_check.php" method="post" id="form-signin" class="needs-validation" novalidate>
         <div class="form-group">
             <label for="input-email">이메일 주소</label>
@@ -64,8 +65,11 @@
                 <input class="form-check-input" type="checkbox" name="remember"> 아이디 저장
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">로그인</button>
+        <button type="submit" class="btn btn-primary mb-3">로그인</button>
     </form>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item px-0" href="signup.php">처음 방문하셨나요? 가입하기</a>
+    <a class="dropdown-item px-0" href="identify.php">비밀번호를 잊으셨나요?</a>
 </div>
 <script type="text/javascript" src="public/js/validation.js"></script>
 <script type="text/javascript" src="public/js/sha512.js"></script>
