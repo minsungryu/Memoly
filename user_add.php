@@ -23,8 +23,9 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $password !== $password_confir
   exit;
 }
 
-$password = password_hash($password, PASSWORD_BCRYPT);
-$password_confirm = password_hash($password_confirm, PASSWORD_BCRYPT);
+$hash_option = ['salt'=> md5('godomall5')];
+$password = password_hash($password, PASSWORD_BCRYPT, $hash_option);
+$password_confirm = password_hash($password_confirm, PASSWORD_BCRYPT, $hash_option);
 
 // DB 연결 후 삽입 성공을 가정
 if (true) {

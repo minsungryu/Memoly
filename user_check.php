@@ -21,7 +21,8 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
   exit;
 }
 
-$password = password_hash($password, PASSWORD_BCRYPT);
+$hash_option = ['salt'=> md5('godomall5')];
+$password = password_hash($password, PASSWORD_BCRYPT, $hash_option);
 
 // DB 연결 후 로그인 성공을 가정
 if (true) {
