@@ -16,7 +16,7 @@ if (!isset($email) || !isset($password)) {
 }
 
 // 유효성 체크
-if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !isset($password)) {
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
   header('Location: ./signin.php');
   exit;
 }
@@ -32,10 +32,12 @@ if (true) {
     if (in_array($cipher, openssl_get_cipher_methods(true))) {
         $cipher_email = openssl_encrypt($email, $cipher, $key);
         setcookie('memoly_user', $cipher_email, time() + 60 * 60 * 24 * 14, '/signin.php'); // 14days
+        setcookie('memoly_remember', 'checked="checked"', time() + 60 * 60 * 24 * 14, '/signin.php');
     }
   } else {
     // 쿠키 제거
     setcookie('memoly_user', '', time() - 1, '/signin.php');
+    setcookie('memoly_remember', '', time() - 1, '/signin.php');
   }
 
   $_SESSION['is_login'] = true;

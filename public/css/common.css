@@ -36,3 +36,20 @@ footer {
 .nav li {
     line-height: 2.2rem;
 }
+
+.valid {
+    border-color: #28a745;
+}
+
+.valid:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40,167,69,.25);
+}
+.error {
+    border-color: #dc3545;
+}
+
+.error:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 9, .25);
+}
