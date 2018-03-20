@@ -6,9 +6,8 @@ $("#form-signin").submit(function () {
     return false;
   }
 
-  $this.find('#hidden-password').val(CryptoJS.SHA512(password));
+  $this.find('#hidden-password').val(CryptoJS.SHA512(password).toString());
   $this.find('#password').removeAttr('value');
-
   return true;
 });
 

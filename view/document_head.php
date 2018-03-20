@@ -1,5 +1,5 @@
 <?php
-require_once 'const.php';
+require_once dirname(__DIR__).'/lib/const.php';
 ?>
 
 <!DOCTYPE html>

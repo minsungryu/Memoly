@@ -11,8 +11,8 @@ $("#form-signup").submit(function(event) {
     return false;
   }
 
-  $this.find('#hidden-password').val(CryptoJS.SHA512(password));
-  $this.find('#hidden-password-confirm').val(CryptoJS.SHA512(password_confirm));
+  $this.find('#hidden-password').val(CryptoJS.SHA512(password).toString());
+  $this.find('#hidden-password-confirm').val(CryptoJS.SHA512(password_confirm).toString());
   $this.find('#password').removeAttr('value');
   $this.find('#password-confirm').removeAttr('value');
 

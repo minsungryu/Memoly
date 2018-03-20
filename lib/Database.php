@@ -1,14 +1,17 @@
 <?php
 
-require_once 'loader.php';
+require_once dirname(__DIR__).'/lib/const.php';
+require_once LIB.'loader.php';
 
-$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv = new Dotenv\Dotenv(ROOT);
 $dotenv->load();
 
 class Database {
 
     private $pdo;
     private $statement;
+
+    const SUCCESS = '00000';
 
     function __construct() {        
         $host = getenv('MYSQL_HOST');
@@ -33,6 +36,10 @@ class Database {
 
     function execute($params = null) {
         return $this->statement->execute($params);
+    }
+
+    function fetch() {
+        return $this->statement->fetch();
     }
 
     function __destruct() {

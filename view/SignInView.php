@@ -1,10 +1,9 @@
 <div class="signin-box">
     <img src="public/img/memoly.png" class="mb-5">
-    <form action="user_check.php" method="post" id="form-signin" novalidate>
+    <form action="signin.php" method="post" id="form-signin" novalidate>
         <div class="form-group">
             <label for="email">이메일 주소</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="your@example.com" required
-            value="<?php $this->rememberEmail() ?>">
+            <input type="email" class="form-control" id="email" name="email" placeholder="your@example.com" required value="<?php $this->rememberEmail() ?>">
                 <div class="invalid-feedback">
                     올바른 이메일 주소를 입력해주세요.
                 </div>

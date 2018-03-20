@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include_once 'loader.php';
+include_once 'lib/loader.php';
 
 $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();

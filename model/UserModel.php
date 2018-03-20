@@ -15,12 +15,11 @@ class UserModel extends Model {
     }
 
     function signin($email, $password) {
-        $statement = $this->prepare('SELECT * FROM user WHERE user_email = :email AND user_password = :password');
+        $statement = $this->prepare('SELECT user_email, user_nickname, is_admin, is_verified, signup_date, last_login, memo_count FROM user WHERE user_email = :email AND user_password = :password');
         $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
         $this->bindParam(':password', $password, PDO::PARAM_STR, 60);
         $this->execute();
-        $user = $statement->fetch();
-        $this->user = $user;
+        $this->user = $statement->fetch();
         return $statement->errorInfo();
     }
 
@@ -34,7 +33,7 @@ class UserModel extends Model {
     }
 
     function confirm($email, $nickname) {
-        $statement = $this->prepare('SELECT * FROM user WHERE user_email = :email AND user_nickname = :nickname');
+        $statement = $this->prepare('SELECT user_email, user_nickname, is_admin, is_verified, signup_date, last_login, memo_count FROM user WHERE user_email = :email AND user_nickname = :nickname');
         $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
         $this->bindParam(':nickname', $nickname, PDO::PARAM_STR, 16);
         $this->execute();

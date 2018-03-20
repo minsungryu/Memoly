@@ -1,6 +1,7 @@
 <?php
 
-require_once 'Database.php';
+require_once dirname(__DIR__).'/lib/const.php';
+require_once LIB.'Database.php';
 
 class Model {
 
@@ -24,6 +25,10 @@ class Model {
 
     function execute($params = null) {
         return $this->db->execute($params);
+    }
+
+    function fetch() {
+        return $this->db->fetch();
     }
 
     function __destruct() {
