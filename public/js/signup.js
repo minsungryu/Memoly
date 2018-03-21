@@ -1,5 +1,5 @@
 $('#terms-agree').click(function() {
-  $('#terms').attr('checked', true);
+  $('#terms').prop('checked', true);
 });
 
 $("#form-signup").submit(function(event) {

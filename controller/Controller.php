@@ -47,7 +47,10 @@ abstract class Controller implements renderable {
     function alert($message) {
         echo '<script>alert('.json_encode($message).');</script>';
     }
-    
+ 
+    function redirect($url) {
+        echo '<script>window.location = "'.$url.'";</script>';
+    }
 }
 
 ?>

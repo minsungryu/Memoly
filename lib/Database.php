@@ -12,6 +12,7 @@ class Database {
     private $statement;
 
     const SUCCESS = '00000';
+    const DUPLICATE = '23000';
 
     function __construct() {        
         $host = getenv('MYSQL_HOST');
