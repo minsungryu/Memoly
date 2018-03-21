@@ -21,6 +21,18 @@ class Database {
         $this->pdo = new PDO('mysql:host='.$host.';dbname='.$db.';charset=utf8', $user, $password);
     }
 
+    function beginTransaction() {
+        return $this->pdo->beginTransaction();
+    }
+
+    function commit() {
+        return $this->pdo->commit();
+    }
+
+    function rollBack() {
+        return $this->pdo->rollBack();
+    }
+
     function query($sql) {
         return $this->pdo->query($sql);
     }

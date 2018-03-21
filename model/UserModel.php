@@ -15,12 +15,25 @@ class UserModel extends Model {
     }
 
     function signin($email, $password) {
-        $statement = $this->prepare('SELECT user_email, user_nickname, is_admin, is_verified, signup_date, last_login, memo_count FROM user WHERE user_email = :email AND user_password = :password');
-        $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
-        $this->bindParam(':password', $password, PDO::PARAM_STR, 60);
-        $this->execute();
-        $this->user = $statement->fetch();
-        return $statement->errorInfo();
+        try {
+            $this->beginTransaction();
+            $statement = $this->prepare('SELECT user_email, user_nickname, is_admin, is_verified, signup_date, last_login, memo_count FROM user WHERE user_email = :email AND user_password = :password');
+            $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
+            $this->bindParam(':password', $password, PDO::PARAM_STR, 60);
+            $this->execute();
+            $this->user = $statement->fetch();
+
+            $statement = $this->prepare('UPDATE user SET last_login = CURRENT_TIMESTAMP WHERE user_email = :email AND user_password = :password');
+            $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
+            $this->bindParam(':password', $password, PDO::PARAM_STR, 60);
+            $this->execute();
+
+            $this->commit();
+        } catch (Exception $e) {
+            $this->rollBack();
+        } finally {
+            return $statement->errorInfo();
+        }
     }
 
     function signup($email, $password, $nickname) {

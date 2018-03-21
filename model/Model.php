@@ -11,6 +11,18 @@ class Model {
         $this->db = new Database();
     }
 
+    function beginTransaction() {
+        return $this->db->beginTransaction();
+    }
+
+    function commit() {
+        return $this->db->commit();
+    }
+
+    function rollBack() {
+        return $this->db->rollBack();
+    }
+
     function query($sql) {
         return $this->db->query($sql);
     }
