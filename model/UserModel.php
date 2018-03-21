@@ -50,6 +50,7 @@ class UserModel extends Model {
         $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
         $this->bindParam(':nickname', $nickname, PDO::PARAM_STR, 16);
         $this->execute();
+        $this->user = $statement->fetch();
         return $statement->errorInfo();
     }
 

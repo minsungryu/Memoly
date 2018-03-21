@@ -26,5 +26,5 @@
     </form>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item px-0" href="signup.php">처음 방문하셨나요? 가입하기</a>
-    <a class="dropdown-item px-0" href="identify.php">비밀번호를 잊으셨나요?</a>
+    <a class="dropdown-item px-0" href="find.php">비밀번호를 잊으셨나요?</a>
 </div>
