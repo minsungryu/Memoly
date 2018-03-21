@@ -1,31 +1,20 @@
 <?php
 session_start();
 
-error_reporting(E_STRICT);
-ini_set("display_errors", 1);
-
-if(isset($_SESSION['is_login'])){
-    if (isset($_SESSION['is_admin'])) {
-        header('Location: ./user.php');
-    } else {
-        header('Location: ./memo.php');
-    }
-}
-
 require_once dirname(__DIR__).'/lib/const.php';
-require_once LIB.'loader.php';
 require_once LIB.'Crypto.php';
 require_once MODEL.'UserModel.php';
 require_once 'Controller.php';
 
-$dotenv = new Dotenv\Dotenv(ROOT);
-$dotenv->load();
-
 class SignInController extends Controller {
+
+    function __construct() {
+        $this->checkSession();
+    }
 
     function render() {
         $this->documentHead();
-        $this->form();
+        $this->signInForm();
         $option = [
             'script' => [
                 'https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js',
@@ -41,14 +30,25 @@ class SignInController extends Controller {
         $this->documentFoot();
     }
 
-    function form() {
+    function signInForm() {
         require_once VIEW.'SignInView.php';
+    }
+
+    function checkSession() {
+        if(isset($_SESSION['user_email'])){
+            if (isset($_SESSION['is_admin'])) {
+                header('Location: ./user.php');
+            } else {
+                header('Location: ./memo.php');
+            }
+        }
     }
 
     function checkUser($email, $password, $remember) {
         // 이메일 유효성 체크
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-          header('Location: ./signin.php');
+            $this->alert('잘못된 이메일입니다.');
+            return;
         }
 
         $password = Crypto::hashPassword($password);
@@ -74,13 +74,12 @@ class SignInController extends Controller {
             if ($_SESSION['is_admin'] === '0') { // 일반 사용자
                 header('Location: ./memo.php');
             } else if ($_SESSION['is_admin'] === '1') { // 관리자
-                // header('Location: ./user.php');
-            } else {    // unknown error
-                header('Location: ./signin.php');
+                header('Location: ./user.php');
+            } else {    // 로그인 실패(NULL)
+                $this->alert('로그인에 실패했습니다.');
             }
-        } else {
-            echo 5;
-            echo "<script>alert('로그인에 실패했습니다.')</script>";
+        } else { // Database 쿼리 오류
+            $this->alert('로그인에 실패했습니다.');
         }
     }
 
@@ -97,9 +96,8 @@ class SignInController extends Controller {
         $remember = $_POST['remember'];
         if (isset($email) && isset($password)) {
             $this->checkUser($email, $password, $remember);
-        } else {
-            $this->render();
         }
+        $this->render();
     }
 
 }

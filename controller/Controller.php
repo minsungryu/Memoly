@@ -43,6 +43,10 @@ abstract class Controller implements renderable {
             }
         }
     }
+
+    function alert($message) {
+        echo '<script>alert('.json_encode($message).');</script>';
+    }
     
 }
 
