@@ -26,8 +26,22 @@ footer {
     border-color: #d42956;
 }
 
+.btn-outline-primary {
+    color: #e42956;
+    border-color: #e42956;
+}
+
+.btn-outline-primary:hover {
+    background-color: #d42956;
+    border-color: #d42956;
+}
+
+.btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show>.btn-outline-primary.dropdown-toggle {
+    background-color: #d42956;
+    border-color: #d42956;
+}
+
 .container {
-    min-height: 70%;
     min-height: -webkit-calc(100% - 64px - 66px);
     min-height: -moz-calc(100% - 64px - 66px);
     min-height: calc(100% - 64px - 66px);

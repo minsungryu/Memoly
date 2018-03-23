@@ -5,16 +5,18 @@ require_once 'Model.php';
 class UserModel extends Model {
 
     private $user;
-
-    function __construct() {
-        parent::__construct();
-    }
+    private $count;
 
     function get() {
         return $this->user;
     }
 
+    function count() {
+        return $this->count;
+    }
+
     function signin($email, $password) {
+        $statement;
         try {
             $this->beginTransaction();
             $statement = $this->prepare('SELECT user_email, user_nickname, is_admin, is_verified, signup_date, last_login, memo_count FROM user WHERE user_email = :email AND user_password = :password');
@@ -46,7 +48,7 @@ class UserModel extends Model {
     }
 
     function confirm($email, $nickname) {
-        $statement = $this->prepare('SELECT user_email, user_nickname, is_admin, is_verified, signup_date, last_login, memo_count FROM user WHERE user_email = :email AND user_nickname = :nickname');
+        $statement = $this->prepare('SELECT user_email, user_nickname, is_admin, is_verified, signup_date, last_login, memo_count FROM user WHERE user_email = :email AND user_nickname = :nickname ORDER BY user_no');
         $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
         $this->bindParam(':nickname', $nickname, PDO::PARAM_STR, 16);
         $this->execute();
@@ -69,6 +71,48 @@ class UserModel extends Model {
         $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
         $this->bindParam(':password', $password, PDO::PARAM_STR, 60);
         $this->execute();
+        return $statement->errorInfo();
+    }
+
+    function fetchList($page = 1, $count = 10) {
+        $statement = $this->prepare('SELECT * FROM user WHERE is_admin <> 1 ORDER BY user_no LIMIT :start, :end');
+        $this->bindParam(':start', ($page - 1) * $count, PDO::PARAM_INT);
+        $this->bindParam(':end', $count, PDO::PARAM_INT);
+        $this->execute();
+        $this->user = $statement->fetchAll();
+        return $statement->errorInfo();
+    }
+
+    function searchByEmail($email) {
+        $statement = $this->prepare('SELECT * FROM user WHERE user_email LIKE :email AND is_admin <> 1 ORDER BY user_no');
+        $this->bindParam(':email', $email.'%', PDO::PARAM_STR, 255);
+        $this->execute();
+        $this->user = $statement->fetchAll();
+        return $statement->errorInfo();
+    }
+
+    function searchByNickname($nickname, $page = 1, $count = 10) {
+        $statement = $this->prepare('SELECT * FROM user WHERE user_nickname = :nickname AND is_admin <> 1 ORDER BY user_no LIMIT :start, :end');
+        $this->bindParam(':nickname', $nickname, PDO::PARAM_STR, 16);
+        $this->bindParam(':start', ($page - 1) * $count, PDO::PARAM_INT);
+        $this->bindParam(':end', $count, PDO::PARAM_INT);
+        $this->execute();
+        $this->user = $statement->fetchAll();
+        return $statement->errorInfo();
+    }
+
+    function countAll() {
+        $statement = $this->prepare('SELECT count(*) FROM user WHERE is_admin <> 1');
+        $this->execute();
+        $this->count = $statement->fetchColumn(0);
+        return $statement->errorInfo();
+    }
+
+    function countByNickname($nickname) {
+        $statement = $this->prepare('SELECT count(*) FROM user WHERE user_nickname = :nickname AND is_admin <> 1');
+        $this->bindParam(':nickname', $nickname, PDO::PARAM_STR, 16);
+        $this->execute();
+        $this->count = $statement->fetchColumn(0);
         return $statement->errorInfo();
     }
 
