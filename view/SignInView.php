@@ -1,4 +1,5 @@
-<div class="signin-box">
+<div class="center-box">
+<div class="form-box">
     <img src="public/img/memoly.png" class="mb-5">
     <form action="signin.php" method="post" id="form-signin" novalidate>
         <div class="form-group">
@@ -27,4 +28,5 @@
     <div class="dropdown-divider"></div>
     <a class="dropdown-item px-0" href="signup.php">처음 방문하셨나요? 가입하기</a>
     <a class="dropdown-item px-0" href="find.php">비밀번호를 잊으셨나요?</a>
+</div>
 </div>

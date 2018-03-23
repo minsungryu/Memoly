@@ -1,4 +1,5 @@
-<div class="find-box">
+<div class="center-box">
+<div class="form-box">
     <h3 class="mb-4">비밀번호 찾기</h3>
     <form action="find.php" method="post" id="form-find" novalidate>
         <div class="form-group">
@@ -11,4 +12,5 @@
         </div>
         <button type="submit" class="btn btn-primary mt-3">사용자 확인</button>
     </form>
+</div>
 </div>

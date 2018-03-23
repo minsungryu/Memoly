@@ -20,7 +20,8 @@ class SignUpController extends Controller {
                 JS.'jquery.validate.min.js',
                 JS.'validate.js',
                 JS.'sha512.js',
-                JS.'signup.js'],
+                JS.'signup.js'
+            ],
             'style' => [
                 CSS.'signup.css'
             ]

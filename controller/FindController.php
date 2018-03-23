@@ -18,9 +18,6 @@ class FindController extends Controller {
             'script' => [
                 JS.'jquery.validate.min.js',
                 JS.'find.js'
-            ],
-            'style' => [
-                CSS.'find.css'
             ]
         ];
         $this->appendScript($option);

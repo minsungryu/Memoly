@@ -20,9 +20,7 @@ class SignInController extends Controller {
                 JS.'jquery.validate.min.js',
                 JS.'validate.js',
                 JS.'sha512.js',
-                JS.'signin.js'],
-            'style' => [
-                CSS.'signin.css'
+                JS.'signin.js'
             ]
         ];
         $this->appendScript($option);

@@ -1,4 +1,5 @@
-<div class="signup-box">
+<div class="center-box">
+<div class="form-box">
 <form action="signup.php" method="post" id="form-signup" novalidate>
     <h3 class="mb-4">회원가입</h3>
     <div class="form-group">
@@ -62,4 +63,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>
