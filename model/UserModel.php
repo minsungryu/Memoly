@@ -57,8 +57,8 @@ class UserModel extends Model {
     }
 
     function update($email, $password, $new_password, $nickname) {
-        $statement = $this->prepare('UPDATE user SET user_password = :new_password, user_nickname = :new_nickname WHERE user_email = :email AND user_password = :password');
-        $this->bindParam(':password', $new_password, PDO::PARAM_STR, 60);
+        $statement = $this->prepare('UPDATE user SET user_password = :new_password, user_nickname = :nickname WHERE user_email = :email AND user_password = :password');
+        $this->bindParam(':new_password', $new_password, PDO::PARAM_STR, 60);
         $this->bindParam(':nickname', $nickname, PDO::PARAM_STR, 16);
         $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
         $this->bindParam(':password', $password, PDO::PARAM_STR, 60);
@@ -66,11 +66,13 @@ class UserModel extends Model {
         return $statement->errorInfo();
     }
 
-    function delete($email, $password) {
-        $statement = $this->prepare('DELETE FROM user WHERE user_email = :email AND user_password = :password');
+    function delete($email, $password, $nickname) {
+        $statement = $this->prepare('DELETE FROM user WHERE user_email = :email AND user_password = :password AND user_nickname = :nickname AND is_admin <> 1');
         $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
         $this->bindParam(':password', $password, PDO::PARAM_STR, 60);
+        $this->bindParam(':nickname', $nickname, PDO::PARAM_STR, 16);
         $this->execute();
+        $this->count = $statement->rowCount();
         return $statement->errorInfo();
     }
 
