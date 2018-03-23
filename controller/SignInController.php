@@ -33,16 +33,6 @@ class SignInController extends Controller {
         require_once VIEW.'SignInView.php';
     }
 
-    function checkSession() {
-        if(isset($_SESSION['user_email'])){
-            if (isset($_SESSION['is_admin'])) {
-                header('Location: ./user.php');
-            } else {
-                header('Location: ./memo.php');
-            }
-        }
-    }
-
     function checkUser($email, $password, $remember) {
         // 이메일 유효성 체크
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -73,7 +63,7 @@ class SignInController extends Controller {
             if ($_SESSION['is_admin'] === '0') { // 일반 사용자
                 header('Location: ./memo.php');
             } else if ($_SESSION['is_admin'] === '1') { // 관리자
-                header('Location: ./user.php');
+                header('Location: ./admin.php');
             } else {    // 로그인 실패(NULL)
                 $this->alert('로그인에 실패했습니다.');
             }

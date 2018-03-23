@@ -28,6 +28,22 @@ abstract class Controller implements renderable {
         require_once VIEW.'document_foot.php';
     }
 
+    function needAuthentication() {
+        if(empty($_SESSION)) {
+            header('Location: ./signin.php');
+        }
+    }
+
+    function checkSession() {
+        if(!empty($_SESSION)) {
+            if ($_SESSION['is_admin'] === '0') { // 일반 사용자
+                header('Location: ./memo.php');
+            } else if ($_SESSION['is_admin'] === '1') { // 관리자
+                header('Location: ./admin.php');
+            }
+        }
+    }
+
     function appendScript($option = null) {
         if (!is_array($option)) {
             return;

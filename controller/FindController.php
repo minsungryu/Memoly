@@ -31,16 +31,6 @@ class FindController extends Controller {
         require_once VIEW.'FindView.php';
     }
 
-    function checkSession() {
-        if(isset($_SESSION['user_email'])){
-            if (isset($_SESSION['is_admin'])) {
-                header('Location: ./user.php');
-            } else {
-                header('Location: ./memo.php');
-            }
-        }
-    }
-
     function confirmUser($email, $nickname) {
         // 이메일 유효성 체크
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

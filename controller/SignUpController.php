@@ -33,16 +33,6 @@ class SignUpController extends Controller {
         require_once VIEW.'SignUpView.php';
     }
 
-    function checkSession() {
-        if(isset($_SESSION['user_email'])){
-            if (isset($_SESSION['is_admin'])) {
-                header('Location: ./user.php');
-            } else {
-                header('Location: ./memo.php');
-            }
-        }
-    }
-
     function checkForm($email, $password, $password_confirm, $nickname, $terms) {
         // 이메일 유효성 체크
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -71,7 +61,7 @@ class SignUpController extends Controller {
         $error = $user->signup($email, $password, $nickname);
 
         if ($error[0] === Database::SUCCESS) {
-            $this->alert('회원가입을 축하합니다!\n로그인 페이지로 이동합니다.');
+            $this->alert('회원가입을 축하합니다! 로그인 페이지로 이동합니다.');
             $this->redirect(SERVER_HOST.'signin.php');
         } else if ($error[0] === Database::DUPLICATE) {
             $this->alert('중복된 아이디입니다.');
