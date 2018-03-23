@@ -17,12 +17,11 @@ class SignInController extends Controller {
         $this->signInForm();
         $option = [
             'script' => [
-                'https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js',
+                JS.'jquery.validate.min.js',
                 JS.'validate.js',
                 JS.'sha512.js',
                 JS.'signin.js'],
             'style' => [
-                CSS.'common.css',
                 CSS.'signin.css'
             ]
         ];

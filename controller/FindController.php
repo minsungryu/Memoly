@@ -16,11 +16,10 @@ class FindController extends Controller {
         $this->findForm();
         $option = [
             'script' => [
-                'https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js',
+                JS.'jquery.validate.min.js',
                 JS.'find.js'
             ],
             'style' => [
-                CSS.'common.css',
                 CSS.'find.css'
             ]
         ];
