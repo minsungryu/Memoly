@@ -78,13 +78,13 @@ class SignInController extends Controller {
     }
 
     function __destruct() {
-        $email = $_POST['email'];
-        $password = $_POST['hidden-password'];
-        $remember = $_POST['remember'];
-        if (isset($email) && isset($password)) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['email'];
+            $password = $_POST['hidden-password'];
+            $remember = $_POST['remember'];
             $this->checkUser($email, $password, $remember);
         }
-        $this->render();
+        parent::__destruct();
     }
 
 }

@@ -79,15 +79,15 @@ class SignUpController extends Controller {
     }
 
     function __destruct() {
-        $email = $_POST['email'];
-        $password = $_POST['hidden-password'];
-        $password_confirm = $_POST['hidden-password-confirm'];
-        $nickname = $_POST['nickname'];
-        $terms = $_POST['terms'];
-        if (isset($email) && isset($password) && isset($password_confirm) && isset($nickname) && isset($terms)) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['email'];
+            $password = $_POST['hidden-password'];
+            $password_confirm = $_POST['hidden-password-confirm'];
+            $nickname = $_POST['nickname'];
+            $terms = $_POST['terms'];
             $this->checkForm($email, $password, $password_confirm, $nickname, $terms);
         }
-        $this->render();
+        parent::__destruct();
     }
 
 }

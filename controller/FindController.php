@@ -46,7 +46,6 @@ class FindController extends Controller {
 
         if ($error[0] === Database::SUCCESS) {
             $confirmed_user = $user->get();
-            
             if (!$confirmed_user) {
                 $this->alert('존재하지 않는 사용자입니다.');
             } else if ($confirmed_user['is_admin'] === '0') {
@@ -62,12 +61,12 @@ class FindController extends Controller {
     }
 
     function __destruct() {
-        $email = $_POST['email'];
-        $nickname = $_POST['nickname'];
-        if (isset($email) && isset($nickname)) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['email'];
+            $nickname = $_POST['nickname'];
             $this->confirmUser($email, $nickname);
         }
-        $this->render();
+        parent::__destruct();
     }
 
 }

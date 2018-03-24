@@ -61,16 +61,18 @@ class EditController extends Controller {
 
         if ($error[0] === Database::SUCCESS) {
             $updated_row = $user->count();
-            if ($updated_row === 1) {
-                $this->alert('성공적으로 수정되었습니다. 다시 로그인 해 주십시오.');
-                $this->redirect(SERVER_HOST.'signout.php');
-            } else if ($updated_row === 0) {
-                $this->alert('회원정보 수정에 실패했습니다.');
-            } else {
-                $this->alert('회원정보 수정에 실패했습니다. 잠시 후 다시 시도해주세요.');
-            }
+            echo $updated_row;
+            // if ($updated_row === 1) {
+            //     $this->alert('성공적으로 수정되었습니다. 다시 로그인 해 주십시오.');
+            //     $this->redirect(SERVER_HOST.'signout.php');
+            // } else if ($updated_row === 0) {
+            //     $this->alert('회원정보 수정에 실패했습니다.');
+            // } else {
+            //     $this->alert('회원정보 수정에 실패했습니다. 잠시 후 다시 시도해주세요.');
+            // }
         } else { // Database 쿼리 오류
-            $this->alert('회원정보 수정에 실패했습니다.');
+            // $this->alert('회원정보 수정에 실패했습니다.');
+            echo 0;
         }
     }
 
@@ -107,19 +109,25 @@ class EditController extends Controller {
     }
 
     function __destruct() {
-        $email = $_POST['email'];
-        $password = $_POST['hidden-password'];
-        $new_password = $_POST['hidden-new-password'];
-        $new_password_confirm = $_POST['hidden-new-password-confirm'];
-        $nickname = $_POST['nickname'];
-        $edit = $_POST['edit'];
-        $leave = $_POST['leave'];
-        if (isset($email) && isset($password) && isset($new_password) && isset($new_password_confirm) && isset($nickname) && isset($edit) && $edit === 'edit') {
+        if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+            parse_str(file_get_contents("php://input"), $_PUT);
+            $email = $_PUT['email'];
+            $password = $_PUT['hidden-password'];
+            $new_password = $_PUT['hidden-new-password'];
+            $new_password_confirm = $_PUT['hidden-new-password-confirm'];
+            $nickname = $_PUT['nickname'];
             $this->checkEditForm($email, $password, $new_password, $new_password_confirm, $nickname);
-        } else if (isset($email) && isset($password) && isset($leave) && $leave === 'leave') {
+            exit;
+        } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            parse_str(file_get_contents("php://input"), $_DELETE);
+            $email = $_DELETE['email'];
+            $password = $_DELETE['hidden-password'];
+            $nickname = $_DELETE['nickname'];
             $this->checkLeaveForm($email, $password, $nickname);
+            exit;
         }
-        $this->render();
+        
+        parent::__destruct();
     }
 
 }
