@@ -60,8 +60,15 @@ class EditController extends Controller {
         $error = $user->update($email, $password, $new_password, $nickname);
 
         if ($error[0] === Database::SUCCESS) {
-            $this->alert('성공적으로 수정되었습니다. 다시 로그인 해 주십시오.');
-            $this->redirect(SERVER_HOST.'signout.php');
+            $updated_row = $user->count();
+            if ($updated_row === 1) {
+                $this->alert('성공적으로 수정되었습니다. 다시 로그인 해 주십시오.');
+                $this->redirect(SERVER_HOST.'signout.php');
+            } else if ($updated_row === 0) {
+                $this->alert('회원정보 수정에 실패했습니다.');
+            } else {
+                $this->alert('회원정보 수정에 실패했습니다. 잠시 후 다시 시도해주세요.');
+            }
         } else { // Database 쿼리 오류
             $this->alert('회원정보 수정에 실패했습니다.');
         }

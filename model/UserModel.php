@@ -44,6 +44,7 @@ class UserModel extends Model {
         $this->bindParam(':password', $password, PDO::PARAM_STR, 60);
         $this->bindParam(':nickname', $nickname, PDO::PARAM_STR, 16);
         $this->execute();
+        $this->count = $statement->rowCount();
         return $statement->errorInfo();
     }
 
@@ -63,6 +64,7 @@ class UserModel extends Model {
         $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
         $this->bindParam(':password', $password, PDO::PARAM_STR, 60);
         $this->execute();
+        $this->count = $statement->rowCount();
         return $statement->errorInfo();
     }
 
@@ -95,7 +97,7 @@ class UserModel extends Model {
 
     function searchByNickname($nickname, $page = 1, $count = 10) {
         $statement = $this->prepare('SELECT * FROM user WHERE user_nickname = :nickname AND is_admin <> 1 ORDER BY user_no LIMIT :start, :end');
-        $this->bindParam(':nickname', $nickname, PDO::PARAM_STR, 16);
+        $this->bindParam(':nickname', '%'.$nickname.'%', PDO::PARAM_STR, 16);
         $this->bindParam(':start', ($page - 1) * $count, PDO::PARAM_INT);
         $this->bindParam(':end', $count, PDO::PARAM_INT);
         $this->execute();

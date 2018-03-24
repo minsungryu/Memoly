@@ -62,8 +62,15 @@ class SignUpController extends Controller {
         $error = $user->signup($email, $password, $nickname);
 
         if ($error[0] === Database::SUCCESS) {
-            $this->alert('회원가입을 축하합니다! 로그인 페이지로 이동합니다.');
-            $this->redirect(SERVER_HOST.'signin.php');
+            $insert_row = $user->count();
+            if ($insert_row === 1) {
+                $this->alert('회원가입을 축하합니다! 로그인 페이지로 이동합니다.');
+                $this->redirect(SERVER_HOST.'signin.php');
+            } else if($insert_row === 0) {
+                $this->alert('회원가입에 실패했습니다.');
+            } else {
+                $this->alert('회원가입에 실패했습니다.');
+            }
         } else if ($error[0] === Database::DUPLICATE) {
             $this->alert('중복된 아이디입니다.');
         } else { // Database 쿼리 오류
