@@ -1,0 +1,18 @@
+.card {
+    cursor: pointer;
+}
+
+.memo-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 210px);
+    grid-gap: 15px;
+    grid-auto-rows: 250px;
+}
+
+.modal-body {
+    height: 300px;
+}
+
+.modal-footer {
+    justify-content: space-between;
+}
