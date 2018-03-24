@@ -29,18 +29,20 @@ abstract class Controller implements renderable {
     }
 
     function needAuthentication() {
-        if(empty($_SESSION)) {
+        if (empty($_SESSION)) {
             header('Location: ./signin.php');
         }
     }
 
     function checkSession() {
-        if(!empty($_SESSION)) {
-            if ($_SESSION['is_admin'] === '0') { // 일반 사용자
-                header('Location: ./memo.php');
-            } else if ($_SESSION['is_admin'] === '1') { // 관리자
-                header('Location: ./admin.php');
-            }
+        if (!empty($_SESSION)) {
+            header('Location: ./memo.php');
+        }
+    }
+
+    function checkAdmin() {
+        if ($_SESSION['is_admin'] === '0') {
+            header('Location: ./memo.php');
         }
     }
 
@@ -67,6 +69,11 @@ abstract class Controller implements renderable {
     function redirect($url) {
         echo '<script>window.location = "'.$url.'";</script>';
     }
+
+    function __destruct() {
+        $this->render();
+    }
+
 }
 
 ?>

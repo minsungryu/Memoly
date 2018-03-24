@@ -3,18 +3,15 @@ session_start();
 
 require_once dirname(__DIR__).'/lib/const.php';
 require_once MODEL.'UserModel.php';
-require_once 'Controller.php';
+require_once 'BoardController.php';
 
-class AdminController extends Controller {
+class AdminController extends BoardController {
 
     private $user_list;
-    private $user_count;
-    private $last_page;
-    private $current_page = 1;
-    private $page_offset = 10;
 
     function __construct() {
         $this->needAuthentication();
+        $this->checkAdmin();
     }
 
     function render() {
@@ -48,7 +45,7 @@ class AdminController extends Controller {
 
         if ($option === '이메일') {
             $error = $user->searchByEmail($search);
-            $this->user_count = 1;
+            $this->item_count = 1;
         } else if ($option === '닉네임') {
             $error = $user->searchByNickname($search, $page, $count);
             $this->countUserByNickname($search);
@@ -76,28 +73,12 @@ class AdminController extends Controller {
         return implode('@', $email);
     }
 
-    function getPage($page = 1) {
-        $url = 'admin.php?';
-        if ($page < 1) {
-            $page = 1;
-        }
-        $url .= 'page='.$page;
-        if (isset($_GET['option'])) {
-            $url .= '&option='.$_GET['option'];
-        }
-        if (isset($_GET['search'])) {
-            $url .= '&search='.$_GET['search'];
-        }
-
-        return $url;
-    }
-
     function countUser() {
         $user = new UserModel();
         $error = $user->countAll();
 
         if ($error[0] === Database::SUCCESS) {
-            $this->user_count = $user->count();
+            $this->item_count = $user->count();
         } else {
             $this->alert('데이터를 받아오는데 실패했습니다.');
         }
@@ -108,15 +89,11 @@ class AdminController extends Controller {
         $error = $user->countByNickname($nickname);
 
         if ($error[0] === Database::SUCCESS) {
-            $this->user_count = $user->count();
+            $this->item_count = $user->count();
         } else {
             $this->alert('데이터를 받아오는데 실패했습니다.');
         }
-    }
-
-    function getLastPage() {
-        return intval(ceil($this->user_count / $this->page_offset));
-    }
+    }    
 
     function __destruct() {
         $option = $_GET['option'];
@@ -134,7 +111,8 @@ class AdminController extends Controller {
         } else {
             $this->fetchUserList($this->current_page);
         }
-        $this->render();
+        
+        parent::__destruct();
     }
 
 }

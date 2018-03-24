@@ -11,7 +11,7 @@
             <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">검색</button>
         </form>
     </ul>
-    <?php if (empty($this->user_list) || count($this->user_list) == 0 || !isset($this->user_count) || $this->user_count == 0): ?>
+    <?php if (empty($this->user_list) || count($this->user_list) == 0 || !isset($this->item_count) || $this->item_count == 0): ?>
     <p class="mt-5 text-center">검색결과가 없습니다.
     <?php else: ?>
     <table class="table table-striped table-hover mt-3">
@@ -43,18 +43,6 @@
             <?php endfor; ?>
         </tbody>
     </table>    
-    <nav>
-        <ul class="pagination justify-content-center">
-            <li class="page-item <?php if ($this->current_page == 1) echo 'disabled'; ?>"><a class="page-link" href="<?= $this->getPage($this->current_page - 5) ?>" tabindex="-1">Previous</a></li>
-            <?php
-                $min = max($this->current_page - 2, 1);
-                $max = min($this->current_page + 2, $this->getLastPage());
-                foreach(range($min, $max) as $page):
-            ?>
-                <li class="page-item <?php if ($page == $this->current_page) echo 'active'; ?>"><a class="page-link" href="<?= $this->getPage($page) ?>"><?= $page ?></a></li>
-            <?php endforeach; ?>
-            <li class="page-item <?php if ($this->current_page == $this->getLastPage()) echo 'disabled'; ?>"><a class="page-link" href="<?= $this->getPage($this->current_page + 5) ?>">Next</a></li>
-        </ul>
-    </nav>
+    <?php require_once 'PageNavigator.php'; ?>
     <?php endif; ?>
 </div>

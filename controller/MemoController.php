@@ -3,18 +3,15 @@ session_start();
 
 require_once dirname(__DIR__).'/lib/const.php';
 require_once MODEL.'MemoModel.php';
-require_once 'Controller.php';
+require_once 'BoardController.php';
 
-class MemoController extends Controller {
+class MemoController extends BoardController {
     
     private $memo_list;
-    private $memo_count;
-    private $last_page;
-    private $current_page = 1;
-    private $page_offset = 15;
 
     function __construct() {
         $this->needAuthentication();
+        $this->page_offset = 15;
     }
 
     function render() {
@@ -65,28 +62,12 @@ class MemoController extends Controller {
         }
     }
 
-    function getPage($page = 1) {
-        $url = 'memo.php?';
-        if ($page < 1) {
-            $page = 1;
-        }
-        $url .= 'page='.$page;
-        if (isset($_GET['option'])) {
-            $url .= '&option='.$_GET['option'];
-        }
-        if (isset($_GET['search'])) {
-            $url .= '&search='.$_GET['search'];
-        }
-
-        return $url;
-    }
-
     function countMemo() {
         $memo = new MemoModel();
         $error = $memo->countAll($_SESSION['user_email']);
 
         if ($error[0] === Database::SUCCESS) {
-            $this->memo_count = $memo->count();
+            $this->item_count = $memo->count();
         } else {
             $this->alert('데이터를 받아오는데 실패했습니다.');
         }
@@ -97,7 +78,7 @@ class MemoController extends Controller {
         $error = $memo->countByTitle($_SESSION['user_email'], $title);
 
         if ($error[0] === Database::SUCCESS) {
-            $this->memo_count = $memo->count();
+            $this->item_count = $memo->count();
         } else {
             $this->alert('데이터를 받아오는데 실패했습니다.');
         }
@@ -108,14 +89,10 @@ class MemoController extends Controller {
         $error = $memo->countByContent($_SESSION['user_email'], $content);
 
         if ($error[0] === Database::SUCCESS) {
-            $this->memo_count = $memo->count();
+            $this->item_count = $memo->count();
         } else {
             $this->alert('데이터를 받아오는데 실패했습니다.');
         }
-    }
-
-    function getLastPage() {
-        return intval(ceil($this->memo_count / $this->page_offset));
     }
 
     function addMemo($memo_title, $memo_content) {
@@ -123,7 +100,7 @@ class MemoController extends Controller {
         $error = $memo->add($_SESSION['user_email'], $memo_title, $memo_content);
 
         if ($error[0] === Database::SUCCESS) {
-            echo $this->memo_count = $memo->count();    // 1(성공), 0(삭제)
+            echo $this->item_count = $memo->count();    // 1(성공), 0(삭제)
         } else {
             echo 0;
         }
@@ -134,7 +111,7 @@ class MemoController extends Controller {
         $error = $memo->update($_SESSION['user_email'], $memo_id, $memo_title, $memo_content);
 
         if ($error[0] === Database::SUCCESS) {
-            echo $this->memo_count = $memo->count();    // 1(성공), 0(삭제)
+            echo $this->item_count = $memo->count();    // 1(성공), 0(삭제)
         } else {
             echo 0;
         }
@@ -145,7 +122,7 @@ class MemoController extends Controller {
         $error = $memo->delete($_SESSION['user_email'], $memo_id);
 
         if ($error[0] === Database::SUCCESS) {
-            echo $this->memo_count = $memo->count();    // 1(성공), 0(삭제)
+            echo $this->item_count = $memo->count();    // 1(성공), 0(삭제)
         } else {
             echo 0;
         }
@@ -195,8 +172,7 @@ class MemoController extends Controller {
             }
             exit;
         }
-
-        $this->render();
+        parent::__destruct();
     }
 
 }
