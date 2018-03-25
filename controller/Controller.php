@@ -122,6 +122,12 @@ abstract class Controller implements renderable {
         echo '<script>window.location = "'.$url.'";</script>';
     }
 
+    function error($message) {
+        header('HTTP/1.1 500 Internal Server Error');
+        header('Content-Type: application/json; charset=UTF-8');
+        die(json_encode($message));
+    }
+
     /**
      * 컨트롤러의 생명주기에 의해 마지막에 render를 호출한다.
      */

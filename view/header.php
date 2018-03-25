@@ -9,7 +9,7 @@ $current_url = explode('?', $_SERVER['REQUEST_URI'])[0];
         </a>
         <ul class="nav">
             <li class="nav-item mx-2 d-inline-block align-middle">
-                <a href="edit.php"><?php
+                <a href="<?= 'edit.php?user-no='.$_SESSION['user_no'] ?>"><?php
                     echo $_SESSION['user_nickname'];
                     if ($_SESSION['is_admin']) {
                         echo '[관리자]';

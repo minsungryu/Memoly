@@ -1,6 +1,6 @@
 <div class="center-box">
 <div class="form-box">
-<form action="signup.php" method="post" id="form-signup" novalidate>
+<form id="form-signup" novalidate>
     <h3 class="mb-4">회원가입</h3>
     <div class="form-group">
         <label for="email">이메일 주소</label>
@@ -9,12 +9,10 @@
     <div class="form-group">
         <label for="password">비밀번호</label>
         <input type="password" class="form-control" id="password" name="password" required>
-        <input type="hidden" id="hidden-password" name="hidden-password">
     </div>
     <div class="form-group">
         <label for="password-confirm">비밀번호 확인</label>
         <input type="password" class="form-control" id="password-confirm" name="password-confirm" required>
-        <input type="hidden" id="hidden-password-confirm" name="hidden-password-confirm">
     </div>
     <div class="form-group">
         <label for="nickname">닉네임</label>
@@ -28,7 +26,14 @@
             </label>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">가입하기</button>
+    <button type="button" id="signup-button" class="btn btn-primary">가입하기</button>
+</form>
+<form id="form-hidden" novalidata>
+    <input type="hidden" id="hidden-email" name="hidden-email">
+    <input type="hidden" id="hidden-password" name="hidden-password">
+    <input type="hidden" id="hidden-password-confirm" name="hidden-password-confirm">
+    <input type="hidden" id="hidden-nickname" name="hidden-nickname">
+    <input type="hidden" id="hidden-terms" name="hidden-terms">
 </form>
 </div>
 <!-- Modal -->

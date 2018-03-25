@@ -13,6 +13,11 @@ class AdminController extends BoardController {
     private $user_list;
 
     /**
+     * 회원 모델
+     */
+    private $user_model;
+
+    /**
      * 컨트롤러 생성시
      * needAuthentication -> 로그인 여부를 확인하고
      * checkAdmin -> 관리자 여부를 확인한다.
@@ -20,6 +25,7 @@ class AdminController extends BoardController {
     function __construct() {
         $this->needAuthentication();
         $this->checkAdmin();
+        $this->user_model = new UserModel();
     }
 
     /**
@@ -41,67 +47,14 @@ class AdminController extends BoardController {
     }
 
     /**
-     * UserModel을 통해 회원 목록을 불러온다.
-     * 결과값은 user_list 변수에 할당한다.
-     */
-    function fetchUserList($page = 1, $count = 10) {
-        $user = new UserModel();
-        $error = $user->fetchList($page, $count);
-
-        if ($error[0] === Database::SUCCESS) {
-            $this->user_list = $user->get();
-        } else {
-            $this->alert('데이터를 받아오는데 실패했습니다.');
-        }
-
-        $this->countUser(); // 페이징을 위해 전체 회원 수를 조회한다.
-    }
-
-    /**
-     * 회원을 검색한다.
+     * 회원을 검색하거나 전체 조회한다.
      * 검색 기준은 이메일과 닉네임 두 가지이다.
      */
     function searchUser($option, $search, $page = 1, $count = 10) {
-        $user = new UserModel();
-        $error;
-
-        if ($option === '이메일') {
-            $error = $user->searchByEmail($search);
-            $this->item_count = 1;  // 이메일은 중복될 수 없다.
-        } else if ($option === '닉네임') {
-            $error = $user->searchByNickname($search, $page, $count);
-            $this->countUserByNickname($search);    // 닉네임은 중복이 가능하므로 같은 닉네임을 가진 회원 수를 조회한다.
-        }
-
-        if ($error[0] === Database::SUCCESS) {
-            $this->user_list = $user->get();
-        } else {
-            $this->alert('데이터를 받아오는데 실패했습니다.');
-        }
-    }
-
-    /**
-     * 페이징에 필요한 전체 회원 수를 각 조건에 맞게 조회한다.
-     * 결과값은 BoardController로부터 상속받은 item_count 변수에 할당한다.
-     */
-    function countUser() {
-        $user = new UserModel();
-        $error = $user->countAll();
-
-        if ($error[0] === Database::SUCCESS) {
-            $this->item_count = $user->count();
-        } else {
-            $this->alert('데이터를 받아오는데 실패했습니다.');
-        }
-    }
-
-    function countUserByNickname($nickname) {
-        $user = new UserModel();
-        $error = $user->countByNickname($nickname);
-
-        if ($error[0] === Database::SUCCESS) {
-            $this->item_count = $user->count();
-        } else {
+        try {
+            $this->user_list = $this->user_model->search([$option => $search], $page, $count);
+            $this->item_count = $this->user_model->count([$option => $search]);
+        } catch (Exception $e) {
             $this->alert('데이터를 받아오는데 실패했습니다.');
         }
     }
@@ -136,15 +89,11 @@ class AdminController extends BoardController {
                 $this->current_page = $page;
             }
 
-            if (isset($option) && isset($search)) {
-                $this->searchUser($option, $search, $this->current_page);
-            } else {
-                $this->fetchUserList($this->current_page);
-            }
+            $this->searchUser($option, $search, $this->current_page);
+            parent::__destruct();   // render
         } else {
             exit;
         }
-        parent::__destruct();   // render
     }
 
 }

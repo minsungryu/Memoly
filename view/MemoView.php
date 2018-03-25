@@ -14,7 +14,7 @@
           <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">검색</button>
       </form>
     </ul>
-    <?php if ($this->item_count === 0): ?>
+    <?php if ($this->item_count == 0): ?>
       <p class="mt-5 text-center">검색결과가 없습니다.
     <?php else: ?>
     <div class="memo-grid mt-3">

@@ -6,22 +6,19 @@ require_once 'Model.php';
 
 class AuthModel extends Model {
 
-    private $count;
-
-    function count() {
-        return $this->count();
-    }
-
     /**
      * 인증 대기 중인 회원의 토큰을 저장한다.
      */
     function addToken($token, $email) {
-        $statement = $this->prepare('INSERT INTO auth VALUES (:token, :email)');
-        $this->bindParam(':token', $token, PDO::PARAM_STR, 128);
-        $this->bindParam(':email', $email, PDO::PARAM_STR, 255);
-        $this->execute();
-        $this->count = $statement->rowCount();
-        return $statement->errorInfo();
+        $statement = $this->db->prepare('INSERT INTO auth VALUES (:token, :email)');
+        $statement->bindParam(':token', $token, PDO::PARAM_STR, 128);
+        $statement->bindParam(':email', $email, PDO::PARAM_STR, 255);
+        
+        if ($statement->execute()) {
+            return $statement->rowCount();
+        } else {
+            // throw
+        }
     }
 
     /**
@@ -30,54 +27,62 @@ class AuthModel extends Model {
      * 토큰을 복호화 후 이메일을 추출하여 해당 회원의 인증을 수행한다.
      */
     function verifyEmail($token) {
-        $statement;
-        $success = false;
         try {
             $this->beginTransaction();
 
-            $statement = $this->prepare('SELECT user_email FROM auth WHERE token = :token');
-            $this->bindParam(':token', $token, PDO::PARAM_STR, 128);
-            $this->execute();
-            $result = $statement->fetch();
-            $user_email = $result[0];
+            // 토큰이 유효한지 검사
+            $statement = $this->db->prepare('SELECT user_email FROM auth WHERE token = :token');
+            $statement->bindParam(':token', $token, PDO::PARAM_STR, 128);
             
-            if (!$user_email) {
-                throw new Exception("존재하지 않는 토큰입니다.");
+            if (!$statement->execute()) {
+                throw new Exception('오류가 발생했습니다.');
             }
 
+            $result = $statement->fetch();
+            $emali = $result['user_email'];
+            
+            if (!$email) {
+                throw new Exception('인증 정보가 없습니다.');
+            }
+
+            // 토큰 해석 및 이메일 추출
             $decrypted_token = Crypto::decryptAES($token);
             $extracted_email = explode('#', $decrypted_token)[1];
 
-            if ($user_email !== $extracted_email) {
-                throw new Exception("잘못된 접근입니다.");
+            if ($email !== $extracted_email) {
+                throw new Exception("인증 과정에서 오류가 발생했습니다.");
             }
 
-            $statement = $this->prepare('UPDATE user SET is_verified = \'Y\' WHERE user_email = :email');
-            $this->bindParam(':email', $user_email, PDO::PARAM_STR, 255);
-            $this->execute();
-            $count = $statement->rowCount();
-
-            if ($count !== 1) {
-                throw new Exception("잘못된 접근입니다.");
-            }
-
-            $statement = $this->prepare('DELETE FROM auth WHERE token = :token AND user_email = :email');
-            $this->bindParam(':token', $token, PDO::PARAM_STR, 128);
-            $this->bindParam(':email', $user_email, PDO::PARAM_STR, 255);
-            $this->execute();
-            $count = $statement->rowCount();
-
-            if ($count !== 1) {
-                throw new Exception("잘못된 접근입니다.");
-            }
+            // 회원의 인증 여부를 Y로 변경
+            $statement = $this->db->prepare('UPDATE user SET is_verified = \'Y\' WHERE user_email = :email');
+            $statement->bindParam(':email', $user_email, PDO::PARAM_STR, 255);
             
-            $success = true;
+            if (!$statement->execute()) {
+                throw new Exception('오류가 발생했습니다.');
+            }
+
+            if ($statement->rowCount() !== 1) {
+                throw new Exception("잘못된 접근입니다.");
+            }
+
+            // 토큰을 테이블에서 삭제
+            $statement = $this->db->prepare('DELETE FROM auth WHERE token = :token AND user_email = :email');
+            $statement->bindParam(':token', $token, PDO::PARAM_STR, 128);
+            $statement->bindParam(':email', $user_email, PDO::PARAM_STR, 255);
+            
+            if (!$statement->execute()) {
+                throw new Exception("잘못된 접근입니다.");
+            }
+
+            if ($statement->rowCount() !== 1) {
+                throw new Exception("잘못된 접근입니다.");
+            }
+
             $this->commit();
+            return 1;
         } catch (Exception $e) {
             $this->rollBack();
-        } finally {
-            return $success;
-            // return $statement->errorInfo();
+            return 0;
         }
     }
 

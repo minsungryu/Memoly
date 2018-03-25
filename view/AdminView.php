@@ -11,7 +11,7 @@
             <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">검색</button>
         </form>
     </ul>
-    <?php if ($this->item_count === 0): ?>
+    <?php if ($this->item_count == 0): ?>
         <p class="mt-5 text-center">검색결과가 없습니다.
     <?php else: ?>
     <table class="table table-striped table-hover mt-3">
@@ -33,7 +33,7 @@
             ?>
             <tr>
                 <td class="text-center"><input type="checkbox"></td>
-                <td class="text-center"><a href="edit.php"><?= $this->hideEmail($this->user_list[$i]['user_email']) ?></a></td>
+                <td class="text-center"><a href="<?= 'edit.php?user-no='.$this->user_list[$i]['user_no'] ?>"><?= $this->hideEmail($this->user_list[$i]['user_email']) ?></a></td>
                 <td class="text-center"><?= $this->user_list[$i]['user_nickname'] ?></td>
                 <td class="text-center"><?= $this->user_list[$i]['signup_date'] ?></td>
                 <td class="text-center"><?= $this->user_list[$i]['last_login'] ?></td>

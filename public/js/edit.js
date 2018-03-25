@@ -1,194 +1,204 @@
-$.validator.addMethod("notEqualTo", function(value, element, param) {
-    return this.optional(element) || value !== param;
+var edit_form = $('#form-edit');
+var hidden_form = $('#form-hidden');
+var action = 'put';
+
+// 현재 비밀번호와 새로운 비밀번호는 같을 수 없다는 제약조건을 정의
+$.validator.addMethod("notEqualTo", function (value, element, param) {
+    return this.optional(element) || value !== $(param).val();
 }, '현재 비밀번호와 같을 수 없습니다.');
 
-    
-$("#edit").click(function(event) {
-    var $this = $('#form-edit');
-    $this.addClass('edit').removeClass('leave');
-    $this.prop('method', 'put');
-    $this.find('#password').prop('required', true);
+var common_validate_rule = {
+    // debug: true,
+    rules: {
+        password: {
+            // required: true,
+            // rangelength: [10, 16]
+            alphanumeric: true
+        },
+        nickname: {
+            required: true,
+            rangelength: [2, 16]
+        }
+    },
+    messages: {
+        password: {
+            required: '비밀번호를 입력해주세요.',
+            // rangelength: '비밀번호는 {0}자 이상 {1}자 이하 영문, 숫자 조합입니다.'.
+            alphanumeric: '비밀번호는 10자 이상 16자 이하 영문, 숫자 조합입니다.'
+        },
+        nickname: {
+            required: '닉네임을 입력해주세요.',
+            rangelength: '닉네임은 {0}글자 이상 {1}자 이하로 설정해주세요.'
+        }
+    },
+    errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
 
-    var email = $this.find('#email') && $this.find('#email').val();
-    var password = $this.find('#password') && $this.find('#password').val();    
-    var new_password = $this.find('#new-password') && $this.find('#new-password').val();
-    var new_password_confirm = $this.find('#new-password-confirm') && $this.find('#new-password-confirm').val();
-
-    if (!password.length || !new_password.length || !new_password_confirm.length ||
-        new_password !== new_password_confirm || !$this.find("#email").valid()) {
-        return false;
+        if (element.prop('type') === 'checkbox') {
+            error.insertAfter(element.next());
+        } else {
+            error.insertAfter(element);
+        }
+    },
+    highlight: function (element, errorClass, validClass) {
+        $(element).addClass(errorClass).removeClass(validClass);
+    },
+    unhighlight: function (element, errorClass, validClass) {
+        $(element).addClass(validClass).removeClass(errorClass);
     }
+}
 
-    $this.find('#hidden-password').val(CryptoJS.SHA512(password).toString());
-    $this.find('#hidden-new-password').val(CryptoJS.SHA512(new_password).toString());
-    $this.find('#hidden-new-password-confirm').val(CryptoJS.SHA512(new_password_confirm).toString());
-    $this.find('#password').removeAttr('value');
-    $this.find('#new-password').removeAttr('value');
-    $this.find('#new-password-confirm').removeAttr('value');
+var new_password_rule = $.extend({}, common_validate_rule);
+new_password_rule['rules']['new-password'] = {
+    // required: true,
+    // rangelength: [10, 16]
+    alphanumeric: true,
+    notEqualTo: '#password'
+};
+new_password_rule['rules']['new-password-confirm'] = {
+    // required: true,
+    // rangelength: [10, 16],
+    alphanumeric: true,
+    equalTo: '#new-password',
+    notEqualTo: '#password'
+};
+new_password_rule['messages']['new-password'] = {
+    // required: '새 비밀번호를 입력해주세요.',
+    // rangelength: '비밀번호는 {0}자 이상 {1}자 이하 영문, 숫자 조합입니다.',
+    alphanumeric: '비밀번호는 10자 이상 16자 이하 영문, 숫자 조합입니다.',
+    notEqualTo: '현재 비밀번호와 같을 수 없습니다.'
+};
+new_password_rule['messages']['new-password-confirm'] = {
+    // required: '새 비밀번호를 다시 입력해주세요.',
+    // rangelength: '비밀번호는 {0}자 이상 {1}자 이하 영문, 숫자 조합입니다.',
+    alphanumeric: '비밀번호는 10자 이상 16자 이하 영문, 숫자 조합입니다.',
+    equalTo: '비밀번호가 일치하지 않습니다.',
+    notEqualTo: '현재 비밀번호와 같을 수 없습니다.'
+};
 
-    var nickname = $this.find('#nickname').val();
-    var nickname_len = nickname && nickname.length;
+// 수정시 제약조건 검증
+$('#form-edit.edit').validate(new_password_rule);
 
-    if (nickname_len < 2 || 16 < nickname_len) {
-        return false;
-    }
+// 삭제시 제약조건 검증
+$('#form-edit.leave').validate(common_validate_rule);
+
+$('#form-hidden').submit(function (event) {
+    event.preventDefault();
 
     $.ajax({
         url: '/edit.php',
-        type: 'put',
-        dataType: 'json',
-        data: {
-            email: email,
-            'hidden-password': $this.find('#hidden-password').val(),
-            'hidden-new-password': $this.find('#hidden-new-password').val(),
-            'hidden-new-password-confirm': $this.find('#hidden-new-password-confirm').val(),
-            nickname: nickname
-        },
-        success: function(put) {
-            if (put) {
-                alert('수정되었습니다!');
-                window.location.reload(true); // without cache
+        type: action,
+        data: $(this).serialize(),
+        success: function (result) {
+            if (action === 'put' && result === '1') {
+                alert('성공적으로 수정되었습니다!');
+                window.location.reload(true);
+            } else if (action === 'delete' && result === '1') {
+                alert('탈퇴에 성공했습니다! 이용해주셔서 감사합니다.');
+                window.location.href = '/signout.php';
             } else {
-                alert('수정에 실패했습니다.');
+                alert('요청에 실패했습니다.');
             }
-            changeWriteButton();
         },
-        error: function(e) {
-            alert(e);
-            changeWriteButton();
+        error: function (err) {
+            alert(err.responseJSON);
         }
     });
 });
 
-$("#leave").click(function(event) {
-    var $this = $('#form-edit');
-    $this.addClass('leave').removeClass('edit');
-    $this.prop('method', 'delete');
-    $this.find('#password').prop('required', false);
+// 수정 버튼 클릭시
+$("#edit").click(function (e) {
+    e.preventDefault();
 
-    var password = $this.find('#password') && $this.find('#password').val();    
+    // validation을 구분하기 위한 작업
+    hidden_form.addClass('edit').removeClass('leave');
+    edit_form.addClass('edit').removeClass('leave');
+    edit_form.find('#password').prop('required', true);
+    action = 'put';
 
-    if (!password.length || !$this.find("#email").valid()) {
-        return false;
+    // 실제로 전송될 폼은 put 메소드로 설정
+    hidden_form.prop('method', 'put');
+
+    // 폼 데이터 검증
+    var email = edit_form.find('#email');
+    var password = edit_form.find('#password').val();
+    var nickname = edit_form.find('#nickname').val();
+
+    if (!email || !email.valid()) {
+        return alert('유효한 이메일을 입력해주세요.');
     }
 
-    $this.find('#hidden-password').val(CryptoJS.SHA512(password).toString());
-    $this.find('#password').removeAttr('value');
+    // 관리자로 인해 제거
+    // if (!password || !password.length) {
+    //     return alert('비밀번호를 입력해주세요.');
+    // }
 
-    var nickname = $this.find('#nickname').val();
-    var nickname_len = nickname && nickname.length;
-
-    if (nickname_len < 2 || 16 < nickname_len) {
-        return false;
+    if (!nickname || nickname.length < 2 || 16 < nickname.length) {
+        return alert('닉네임은 2자 이상 16자 이하로 입력해주세요.');
     }
 
-    return true;
-});
+    hidden_form.find('#hidden-email').val(email.val());
+    hidden_form.find('#hidden-nickname').val(nickname);
+    if (password && password.length) {
+        hidden_form.find('#hidden-password').val(CryptoJS.SHA512(password).toString());
+    }
 
-$('#form-edit.edit').validate({
-    // debug: true,
-    rules: {
-        password: {
-            required: true,
-            // rangelength: [10, 16]
-            alphanumeric: true
-        },
-        'new-password': {
-            required: true,
-            // rangelength: [10, 16]
-            alphanumeric: true,
-            notEqualTo: '$password'
-        },
-        'new-password-confirm': {
-            required: true,
-            // rangelength: [10, 16],
-            alphanumeric: true,
-            equalTo: '#new-password',
-            notEqualTo: '$password'
-        },
-        nickname: {
-            required: true,
-            rangelength: [2, 16]
-        }
-    },
-    messages: {
-        password: {
-            required: '비밀번호를 입력해주세요.',
-            // rangelength: '비밀번호는 {0}자 이상 {1}자 이하 영문, 숫자 조합입니다.'.
-            alphanumeric: '비밀번호는 10자 이상 16자 이하 영문, 숫자 조합입니다.'
-        },
-        'new-password': {
-            required: '새 비밀번호를 입력해주세요.',
-            // rangelength: '비밀번호는 {0}자 이상 {1}자 이하 영문, 숫자 조합입니다.',
-            alphanumeric: '비밀번호는 10자 이상 16자 이하 영문, 숫자 조합입니다.',
-            notEqualTo: '현재 비밀번호와 같을 수 없습니다.'
-        },
-        'new-password-confirm': {
-            required: '새 비밀번호를 다시 입력해주세요.',
-            // rangelength: '비밀번호는 {0}자 이상 {1}자 이하 영문, 숫자 조합입니다.',
-            alphanumeric: '비밀번호는 10자 이상 16자 이하 영문, 숫자 조합입니다.',
-            equalTo: '비밀번호가 일치하지 않습니다.',
-            notEqualTo: '현재 비밀번호와 같을 수 없습니다.'
-        },
-        nickname: {
-            required: '닉네임을 입력해주세요.',
-            rangelength: '닉네임은 {0}글자 이상 {1}자 이하로 설정해주세요.'
-        }
-    },
-    errorPlacement: function(error, element) {
-        error.addClass('invalid-feedback');
+    var new_password = edit_form.find('#new-password').val();
+    var new_password_confirm = edit_form.find('#new-password-confirm').val();
 
-        if (element.prop('type') === 'checkbox') {
-        error.insertAfter(element.next());
-        } else {
-        error.insertAfter(element);
+    // 새로운 비밀번호를 입력하지 않았다면
+    if (!new_password && !new_password_confirm) {
+        hidden_form.submit();
+    } else {
+        // 새로운 비밀번호를 입력했음에도 일치하지 않을 경우
+        if (new_password.length && new_password_confirm.length && new_password !== new_password_confirm) {
+            return alert('비밀번호가 일치하지 않습니다.');
         }
-    },
-    highlight: function(element, errorClass, validClass) {
-        $(element).addClass(errorClass).removeClass(validClass);
-    },
-    unhighlight: function(element, errorClass, validClass) {
-        $(element).addClass(validClass).removeClass(errorClass);
+
+        // 전송할 데이터에 SHA512 해시 적용
+        hidden_form.find('#hidden-new-password').val(CryptoJS.SHA512(new_password).toString());
+        hidden_form.find('#hidden-new-password-confirm').val(CryptoJS.SHA512(new_password_confirm).toString());
+        hidden_form.submit();
     }
 });
 
-$('#form-edit.leave').validate({
-    // debug: true,
-    rules: {
-        password: {
-            required: true,
-            // rangelength: [10, 16]
-            alphanumeric: true
-        },
-        nickname: {
-            required: true,
-            rangelength: [2, 16]
-        }
-    },
-    messages: {
-        password: {
-            required: '비밀번호를 입력해주세요.',
-            // rangelength: '비밀번호는 {0}자 이상 {1}자 이하 영문, 숫자 조합입니다.'.
-            alphanumeric: '비밀번호는 10자 이상 16자 이하 영문, 숫자 조합입니다.'
-        },
-        nickname: {
-            required: '닉네임을 입력해주세요.',
-            rangelength: '닉네임은 {0}글자 이상 {1}자 이하로 설정해주세요.'
-        }
-    },
-    errorPlacement: function(error, element) {
-        error.addClass('invalid-feedback');
+// 탈퇴 버튼 클릭시
+$("#leave").click(function (event) {
+    event.preventDefault();
 
-        if (element.prop('type') === 'checkbox') {
-        error.insertAfter(element.next());
-        } else {
-        error.insertAfter(element);
-        }
-    },
-    highlight: function(element, errorClass, validClass) {
-        $(element).addClass(errorClass).removeClass(validClass);
-    },
-    unhighlight: function(element, errorClass, validClass) {
-        $(element).addClass(validClass).removeClass(errorClass);
+    // validation을 구분하기 위한 작업
+    hidden_form.addClass('leave').removeClass('edit');
+    edit_form.addClass('leave').removeClass('edit');
+    edit_form.find('#password').prop('required', false);
+    action = 'delete';
+
+    // 실제로 전송될 폼은 delete 메소드로 설정
+    hidden_form.prop('method', 'delete');
+
+    // 폼 데이터 검증
+    var email = edit_form.find('#email');
+    var password = edit_form.find('#password').val();
+    var nickname = edit_form.find('#nickname').val();
+
+    if (!email || !email.valid()) {
+        return alert('유효한 이메일을 입력해주세요.');
     }
+
+    if (!password || !password.length) {
+        return alert('비밀번호를 입력해주세요.');
+    }
+
+    if (!nickname || nickname.length < 2 || 16 < nickname.length) {
+        return alert('닉네임은 2자 이상 16자 이하로 입력해주세요.');
+    }
+
+    /**
+     * 전송할 폼에 값 입력
+     */
+    hidden_form.find('#hidden-email').val(email.val());
+    hidden_form.find('#hidden-nickname').val(nickname);
+    if (password && password.length) {
+        hidden_form.find('#hidden-password').val(CryptoJS.SHA512(password).toString());
+    }
+    hidden_form.submit();
 });
