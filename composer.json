@@ -3,7 +3,8 @@
     "description": "NHN godo 3기 개발과제",
     "type": "project",
     "require": {
-        "vlucas/phpdotenv": "^2.4"
+        "vlucas/phpdotenv": "^2.4",
+        "phpmailer/phpmailer": "^6.0"
     },
     "authors": [
         {
