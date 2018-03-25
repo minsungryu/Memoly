@@ -125,7 +125,7 @@ class EditController extends Controller {
     /**
      * 컨트롤러 소멸시
      * HTTP METHOD가 GET이면 -> render에서 뷰를 구성하고 호출한다.
-     * HTTP METHOD가 POST이면 -> 비정상적인 요청으로 간주하고 종료한다.
+     * HTTP METHOD가 POST이면 -> 관리자가 수정할 수 있도록 한다.
      * HTTP METHOD가 PUT이면 -> 폼 검사 후 정보를 수정한다.(AJAX - 화면 호출하지 않음)
      * HTTP METHOD가 DELETE이면 -> 폼 검사 후 삭제를 수행한다.(AJAX - 화면 호출하지 않음)
      */
@@ -134,7 +134,7 @@ class EditController extends Controller {
             parent::__destruct();   // render
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
-        } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+        } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {  // is admin 추가하기
             parse_str(file_get_contents("php://input"), $_PUT);
             $email = $_PUT['email'];
             $password = $_PUT['hidden-password'];
@@ -143,7 +143,7 @@ class EditController extends Controller {
             $nickname = $_PUT['nickname'];
             $this->checkEditForm($email, $password, $new_password, $new_password_confirm, $nickname);
             exit;
-        } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+        } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') { // is admin 추가하기
             parse_str(file_get_contents("php://input"), $_DELETE);
             $email = $_DELETE['email'];
             $password = $_DELETE['hidden-password'];

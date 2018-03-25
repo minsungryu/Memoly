@@ -53,7 +53,7 @@ abstract class BoardController extends Controller {
      * 마지막 페이지를 반환한다.
      */
     function getLastPage() {
-        return intval(ceil($this->item_count / $this->page_offset));
+        return max(1, intval(ceil($this->item_count / $this->page_offset)));
     }
 
     /**

@@ -58,7 +58,7 @@ class SignInController extends Controller {
         if ($error[0] === Database::SUCCESS) {
             // 쿠키로 아이디 저장
             if (isset($remember)) {
-                $encrypted_email = Crypto::encryptEmail($email);
+                $encrypted_email = Crypto::encryptAES($email);
                 if (!is_null($encrypted_email)) {
                     $duration = time() + 60 * 60 * 24 * 14; // 14일
                     setcookie('memoly_user', $encrypted_email, $duration, '/signin.php');
@@ -70,10 +70,16 @@ class SignInController extends Controller {
                 setcookie('memoly_remember', '', time() - 1, '/signin.php');
             }
 
-            $_SESSION = $user->get();
-            if ($_SESSION['is_admin'] === '0') { // 일반 사용자
-                header('Location: ./memo.php');
-            } else if ($_SESSION['is_admin'] === '1') { // 관리자
+            $signin_user = $user->get();
+            if ($signin_user['is_admin'] === '0') { // 일반 사용자
+                if ($this->isEmailVerified($signin_user)) {
+                    $_SESSION = $signin_user;
+                    header('Location: ./memo.php');
+                } else {
+                    $this->alert('아직 이메일 인증이 완료되지 않았습니다. 메일을 받지 못한 경우 관리자에게 문의하세요. godo.memoly@gmail.com');
+                }
+            } else if ($signin_user['is_admin'] === '1') { // 관리자
+                $_SESSION = $signin_user;
                 header('Location: ./admin.php');
             } else {    // 로그인 실패(NULL)
                 $this->alert('로그인에 실패했습니다.');
@@ -89,7 +95,7 @@ class SignInController extends Controller {
     function rememberEmail() {
         $encrypted_email = $_COOKIE['memoly_user'];
         if (isset($encrypted_email)) {
-            echo Crypto::decryptEmail($encrypted_email);
+            echo Crypto::decryptAES($encrypted_email);
         }
     }
 

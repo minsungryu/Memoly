@@ -73,8 +73,8 @@ abstract class Controller implements renderable {
     /**
      * 접속한 사용자의 이메일 인증 여부를 반환한다.
      */
-    function isEmailVerified() {
-        if ($_SESSION['is_verified'] === 'Y') {
+    function isEmailVerified($user) {
+        if ($user['is_verified'] === 'Y') {
             return true;
         }
         return false;

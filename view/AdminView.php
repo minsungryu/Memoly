@@ -33,7 +33,7 @@
             ?>
             <tr>
                 <td class="text-center"><input type="checkbox"></td>
-                <td class="text-center"><?= $this->hideEmail($this->user_list[$i]['user_email']) ?></td>
+                <td class="text-center"><a href="edit.php"><?= $this->hideEmail($this->user_list[$i]['user_email']) ?></a></td>
                 <td class="text-center"><?= $this->user_list[$i]['user_nickname'] ?></td>
                 <td class="text-center"><?= $this->user_list[$i]['signup_date'] ?></td>
                 <td class="text-center"><?= $this->user_list[$i]['last_login'] ?></td>

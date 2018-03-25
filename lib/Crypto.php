@@ -11,12 +11,12 @@ $dotenv->load();
  */
 final class Crypto {
 
-    private const email_cipher = 'AES256';
+    private const cipher_alias = 'AES256';
 
     private function __construct() { }
 
     /**
-     * 비밀번호를 암호화한다.
+     * 비밀번호를 bcrypt로 암호화한다.
      */
     public static function hashPassword($password) {
         $bcrypt_option = ['salt'=> getenv('BCRYPT_SALT')];
@@ -24,22 +24,22 @@ final class Crypto {
     }
 
     /**
-     * 쿠키에 저장할 이메일 주소를 암호화한다.
+     * AES256 암호화
      */
-    public static function encryptEmail($email) {
+    public static function encryptAES($message) {
         $aes_key = getenv('AES256_KEY');
-        if (in_array(self::email_cipher, openssl_get_cipher_methods(true))) {
-            return openssl_encrypt($email, self::email_cipher, $aes_key);
+        if (in_array(self::cipher_alias, openssl_get_cipher_methods(true))) {
+            return openssl_encrypt($message, self::cipher_alias, $aes_key);
         }
     }
 
     /**
-     * 쿠키에 저장된 이메일 주소를 복호화한다.
+     * AES256 복호화
      */
-    public static function decryptEmail($email) {
+    public static function decryptAES($message) {
         $aes_key = getenv('AES256_KEY');
-        if (in_array(self::email_cipher, openssl_get_cipher_methods(true))) {
-            return openssl_decrypt($email, self::email_cipher, $aes_key);
+        if (in_array(self::cipher_alias, openssl_get_cipher_methods(true))) {
+            return openssl_decrypt($message, self::cipher_alias, $aes_key);
         }
         
     }

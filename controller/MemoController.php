@@ -18,6 +18,9 @@ class MemoController extends BoardController {
      * 한 페이지에 보여질 목록 갯수를 수정한다.
      */
     function __construct() {
+        if (!$this->isEmailVerified($_SESSION)) {
+            header('Location: ./signin.php');
+        }
         $this->needAuthentication();
         $this->page_offset = 15;
     }
@@ -33,12 +36,7 @@ class MemoController extends BoardController {
 
         $this->documentHead();
         $this->header();
-        if ($this->isEmailVerified()) { // 이메일이 인증된 사용자라면 메모 목록을 보여준다.
-            $this->memoView();
-        } else {                        // 아니라면 인증 대기 화면을 보여준다.
-            $this->unverifiedView();
-            array_push($option['style'], CSS.'unverified.css');
-        }
+        $this->memoView();
         $this->footer();
         $this->appendScript($option);
         $this->documentFoot();
@@ -47,14 +45,9 @@ class MemoController extends BoardController {
     /**
      * 컨트롤러에 바인딩 될 뷰를 호출한다.
      * memoView -> 메모 목록 출력
-     * unverifiedView -> 이메일 미인증시 인증 대기화면 출력
      */
     function memoView() {
         require_once VIEW.'MemoView.php';
-    }
-
-    function unverifiedView() {
-        require_once VIEW.'unverified.php';
     }
 
     /**
