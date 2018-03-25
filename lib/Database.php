@@ -8,12 +8,29 @@ $dotenv->load();
 
 class Database {
 
+    /**
+     * PDO 객체 변수
+     */
     private $pdo;
+
+    /**
+     * MySQL statement 변수
+     */
     private $statement;
 
+    /**
+     * 요청 성공시 errorInfo 객체는 00000을 반환한다.
+     */
     const SUCCESS = '00000';
+
+    /**
+     * 중복으로 인한 요청 실패시 errorInfo 객체는 23000을 반환한다.
+     */
     const DUPLICATE = '23000';
 
+    /**
+     * 환경변수 혹은 .env 파일에 저장된 값을 통해 PDO 객체를 초기화한다.
+     */
     function __construct() {        
         $host = getenv('MYSQL_HOST');
         $db = getenv('MYSQL_DATABASE');
@@ -50,11 +67,14 @@ class Database {
     function execute($params = null) {
         return $this->statement->execute($params);
     }
-
+    
     function fetch() {
         return $this->statement->fetch();
     }
 
+    /**
+     * PDO 객체를 소멸시켜 MySQL과 연결을 끊는다.
+     */
     function __destruct() {
         $this->pdo = null;
     }

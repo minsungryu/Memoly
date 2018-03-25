@@ -5,8 +5,14 @@ require_once LIB.'Database.php';
 
 class Model {
 
+    /**
+     * DB 인스턴스를 저장할 변수
+     */
     protected $db;
 
+    /**
+     * 모델 객체 생성 시 DB와 연결을 수행한다.
+     */
     function __construct() {
         $this->db = new Database();
     }
@@ -43,6 +49,9 @@ class Model {
         return $this->db->fetch();
     }
 
+    /**
+     * 모델 객체 생성 시 DB와 연결을 종료한다.
+     */
     function __destruct() {
         $this->db = null;
     }

@@ -1,6 +1,6 @@
 <div class="center-box">
 <div class="form-box">
-<form action="edit.php" method="post" id="form-edit" novalidate>
+<form action="edit.php" id="form-edit" class="edit" novalidate>
     <h3 class="mb-4">회원정보 수정</h3>
     <div class="form-group">
         <label for="email">이메일 주소</label>
@@ -26,9 +26,9 @@
         <input type="text" class="form-control" id="nickname" name="nickname" required value="<?= $_SESSION['user_nickname'] ?>">
     </div>
     <div class="mt-4">
-        <button type="submit" class="btn btn-primary" id="edit" name="edit" value="edit">수정하기</button>
+        <button type="submit" class="btn btn-primary" id="edit">수정하기</button>
         <?php if ($_SESSION['is_admin'] === '0'): ?>
-        <button type="submit" class="btn btn-dark" id="leave" name="leave" value="leave">탈퇴하기</button>
+        <button type="submit" class="btn btn-dark" id="leave">탈퇴하기</button>
         <?php endif; ?>
     </div>
 </form>

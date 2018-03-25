@@ -11,8 +11,8 @@
             <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">검색</button>
         </form>
     </ul>
-    <?php if (empty($this->user_list) || count($this->user_list) == 0 || !isset($this->item_count) || $this->item_count == 0): ?>
-    <p class="mt-5 text-center">검색결과가 없습니다.
+    <?php if ($this->item_count === 0): ?>
+        <p class="mt-5 text-center">검색결과가 없습니다.
     <?php else: ?>
     <table class="table table-striped table-hover mt-3">
         <thead>
@@ -43,6 +43,6 @@
             <?php endfor; ?>
         </tbody>
     </table>    
-    <?php require_once 'PageNavigator.php'; ?>
+    <?php $this->pageNavigator(); ?>
     <?php endif; ?>
 </div>

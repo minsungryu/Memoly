@@ -6,7 +6,10 @@ $.validator.addMethod("notEqualTo", function(value, element, param) {
 $("#edit").click(function(event) {
     var $this = $('#form-edit');
     $this.addClass('edit').removeClass('leave');
+    $this.prop('method', 'put');
+    $this.find('#password').prop('required', true);
 
+    var email = $this.find('#email') && $this.find('#email').val();
     var password = $this.find('#password') && $this.find('#password').val();    
     var new_password = $this.find('#new-password') && $this.find('#new-password').val();
     var new_password_confirm = $this.find('#new-password-confirm') && $this.find('#new-password-confirm').val();
@@ -16,9 +19,9 @@ $("#edit").click(function(event) {
         return false;
     }
 
+    $this.find('#hidden-password').val(CryptoJS.SHA512(password).toString());
     $this.find('#hidden-new-password').val(CryptoJS.SHA512(new_password).toString());
     $this.find('#hidden-new-password-confirm').val(CryptoJS.SHA512(new_password_confirm).toString());
-    $this.find('#hidden-password').val(CryptoJS.SHA512(password).toString());
     $this.find('#password').removeAttr('value');
     $this.find('#new-password').removeAttr('value');
     $this.find('#new-password-confirm').removeAttr('value');
@@ -30,12 +33,38 @@ $("#edit").click(function(event) {
         return false;
     }
 
-    return true;
+    $.ajax({
+        url: '/edit.php',
+        type: 'put',
+        dataType: 'json',
+        data: {
+            email: email,
+            'hidden-password': $this.find('#hidden-password').val(),
+            'hidden-new-password': $this.find('#hidden-new-password').val(),
+            'hidden-new-password-confirm': $this.find('#hidden-new-password-confirm').val(),
+            nickname: nickname
+        },
+        success: function(put) {
+            if (put) {
+                alert('수정되었습니다!');
+                window.location.reload(true); // without cache
+            } else {
+                alert('수정에 실패했습니다.');
+            }
+            changeWriteButton();
+        },
+        error: function(e) {
+            alert(e);
+            changeWriteButton();
+        }
+    });
 });
 
 $("#leave").click(function(event) {
     var $this = $('#form-edit');
     $this.addClass('leave').removeClass('edit');
+    $this.prop('method', 'delete');
+    $this.find('#password').prop('required', false);
 
     var password = $this.find('#password') && $this.find('#password').val();    
 
@@ -52,7 +81,7 @@ $("#leave").click(function(event) {
     if (nickname_len < 2 || 16 < nickname_len) {
         return false;
     }
-  
+
     return true;
 });
 

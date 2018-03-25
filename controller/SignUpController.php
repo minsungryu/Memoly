@@ -8,10 +8,17 @@ require_once 'Controller.php';
 
 class SignUpController extends Controller {
 
+    /**
+     * 컨트롤러 생성시
+     * 이미 로그인되어있는 사용자는 접근할 수 없도록 한다.
+     */
     function __construct() {
         $this->checkSession();
     }
 
+    /**
+     * 화면 구성을 담당한다.
+     */
     function render() {
         $this->documentHead();
         $this->signUpForm();
@@ -30,12 +37,17 @@ class SignUpController extends Controller {
         $this->documentFoot();
     }
 
+    /**
+     * 컨트롤러에 바인딩 될 뷰를 호출한다.
+     */
     function signUpForm() {
         require_once VIEW.'SignUpView.php';
     }
 
+    /**
+     * 회원가입 폼으로 넘겨받은 데이터의 유효성을 체크한다.
+     */
     function checkForm($email, $password, $password_confirm, $nickname, $terms) {
-        // 이메일 유효성 체크
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->alert('잘못된 이메일입니다.');
             return;
@@ -78,14 +90,25 @@ class SignUpController extends Controller {
         }
     }
 
+    /**
+     * 컨트롤러 소멸시
+     * HTTP METHOD가 GET이면 -> render에서 뷰를 구성하고 호출한다.
+     * HTTP METHOD가 POST이면 -> 로그인 요청을 확인하고 결과를 보여준다.(일관성을 위해 AJAX로 변경할까?)
+     * HTTP METHOD가 PUT이면 -> 비정상적인 요청으로 간주하고 종료한다.
+     * HTTP METHOD가 DELETE이면 -> 비정상적인 요청으로 간주하고 종료한다.
+     */
     function __destruct() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            // do nothing
+        } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
             $password = $_POST['hidden-password'];
             $password_confirm = $_POST['hidden-password-confirm'];
             $nickname = $_POST['nickname'];
             $terms = $_POST['terms'];
             $this->checkForm($email, $password, $password_confirm, $nickname, $terms);
+        } else {
+            exit;
         }
         parent::__destruct();
     }
