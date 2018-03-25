@@ -112,7 +112,7 @@ class UserModel extends Model {
      * 관리자를 제외하고 전체 회원 목록을 불러온다.
      */
     function fetchList($page = 1, $count = 10) {
-        $statement = $this->prepare('SELECT * FROM user WHERE is_admin <> 1 ORDER BY user_no LIMIT :start, :end');
+        $statement = $this->prepare('SELECT * FROM user WHERE is_admin <> 1 ORDER BY user_no DESC LIMIT :start, :end');
         $this->bindParam(':start', ($page - 1) * $count, PDO::PARAM_INT);
         $this->bindParam(':end', $count, PDO::PARAM_INT);
         $this->execute();
@@ -125,7 +125,7 @@ class UserModel extends Model {
      * 관리자를 제외하고 이메일로 회원을 검색한다.
      */
     function searchByEmail($email) {
-        $statement = $this->prepare('SELECT * FROM user WHERE user_email LIKE :email AND is_admin <> 1 ORDER BY user_no');
+        $statement = $this->prepare('SELECT * FROM user WHERE user_email LIKE :email AND is_admin <> 1 ORDER BY user_no DESC');
         $this->bindParam(':email', $email.'%', PDO::PARAM_STR, 255);
         $this->execute();
         $this->user = $statement->fetchAll();
@@ -138,7 +138,7 @@ class UserModel extends Model {
      * 닉네임은 중복이 가능하므로 여러명이 검색될 수 있다.
      */
     function searchByNickname($nickname, $page = 1, $count = 10) {
-        $statement = $this->prepare('SELECT * FROM user WHERE user_nickname = :nickname AND is_admin <> 1 ORDER BY user_no LIMIT :start, :end');
+        $statement = $this->prepare('SELECT * FROM user WHERE user_nickname LIKE :nickname AND is_admin <> 1 ORDER BY user_no DESC LIMIT :start, :end');
         $this->bindParam(':nickname', '%'.$nickname.'%', PDO::PARAM_STR, 16);
         $this->bindParam(':start', ($page - 1) * $count, PDO::PARAM_INT);
         $this->bindParam(':end', $count, PDO::PARAM_INT);
