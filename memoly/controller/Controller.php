@@ -122,6 +122,9 @@ abstract class Controller implements renderable {
         echo '<script>window.location = "'.$url.'";</script>';
     }
 
+    /**
+     * ajax error 콜백이 동작하도록 에러를 발생시킴
+     */
     function error($message) {
         header('HTTP/1.1 500 Internal Server Error');
         header('Content-Type: application/json; charset=UTF-8');

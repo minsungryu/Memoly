@@ -12,7 +12,7 @@ define('VIEW', ROOT.'view/');
 define('LIB', ROOT.'lib/');
 define('VENDOR', ROOT.'vendor/');
 
-define('SERVER_HOST', "http://{$_SERVER['HTTP_HOST']}/");
+define('SERVER_HOST', "http://{$_SERVER['HTTP_HOST']}/memoly/");
 define('PUBLIC_ASSETS', SERVER_HOST.'public/');
 define('CSS', PUBLIC_ASSETS.'css/');
 define('IMG', PUBLIC_ASSETS.'img/');
