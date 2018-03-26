@@ -10,7 +10,7 @@ $("#signin-button").click(function (e) {
   var email = signin_form.find("#email");
   var password = signin_form.find('#password').val();
   
-  if (!email || !email.valid()) {
+  if (!email.val() || !email.valid()) {
     return alert('유효한 이메일을 입력해주세요.');
   }
 

@@ -10,7 +10,7 @@
             <label for="nickname">닉네임</label>
             <input type="text" class="form-control" id="nickname" name="nickname" required>
         </div>
-        <button type="submit" class="btn btn-primary mt-3">사용자 확인</button>
+        <button type="button" id="find-button" class="btn btn-primary mt-3">사용자 확인</button>
     </form>
 </div>
 </div>

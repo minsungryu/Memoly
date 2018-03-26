@@ -32,26 +32,49 @@ class Mailer {
     }
 
     /**
-     * 메일 제목 설정
+     * 인증 메일 제목 설정
      */
-    function subject($nickname) {
+    function verifySubject($nickname) {
         $this->mail->Subject = '[Memoly] '.$nickname.'님의 가입을 축하합니다!';
     }
 
     /**
-     * 메일 본문 지정
+     * 인증 메일 본문 지정
      */
-    function body($nickname, $link) {
+    function verifyBody($nickname, $link) {
         $this->mail->Body = '';
         $this->mail->Body .= '<h1>'.$nickname.'님의 가입을 진심으로 환영합니다!</h1>';
         $this->mail->Body .= '<h3><a href="'.$link.'">링크</a>을 클릭하여 회원가입을 완료해주세요.</h3>';
     }
 
     /**
-     * HTML 전송 불가시 대체 문구 설정
+     * 인증 메일 HTML 전송 불가시 대체 문구 설정
      */
-    function alt($link) {
+    function verifyAlt($link) {
         $this->mail->AltBody = '메일이 보이지 않을 경우 '.$link.' 에 접속하여 인증을 완료하십시오.';
+    }
+
+    /**
+     * 임시 비밀번호 메일 제목 설정
+     */
+    function tempPassSubject($nickname) {
+        $this->mail->Subject = '[Memoly] '.$nickname.'님, 임시 비밀번호를 발급해드립니다.';
+    }
+
+    /**
+     * 임시 비밀번호 본문 지정
+     */
+    function tempPassBody($nickname, $temp_password) {
+        $this->mail->Body = '';
+        $this->mail->Body .= '<p>'.$nickname.'님의 임시 비밀번호는 <strong>'.$temp_password.'</strong>입니다.</p>';
+        $this->mail->Body .= '<p>로그인 후 반드시 비밀번호를 변경해주세요.</p>';
+    }
+
+    /**
+     * 임시 비밀번호 메일 HTML 전송 불가시 대체 문구 설정
+     */
+    function tempPassAlt($temp_password) {
+        $this->mail->AltBody = '임시 비밀번호 '.$temp_password.' 로 로그인 후 반드시 비밀번호를 재설정해주세요.';
     }
 
     /**

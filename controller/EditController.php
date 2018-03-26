@@ -131,6 +131,11 @@ class EditController extends Controller {
             $result = $this->user_model->update($email, $nickname, $password, $new_password);
 
             if ($result === 1) {
+                // 본인 정보를 수정한 경우 서버에서 다시 받아온다.
+                // 관리자는 다른 회원의 정보를 수정할 수 있기 때문
+                if ($email === $_SESSION['user_email']) {
+                    $_SESSION = $this->user_model->fetch($_SESSION['user_no']);
+                }
                 echo 1;
             } else {
                 $this->error('회원정보 수정에 실패했습니다.');

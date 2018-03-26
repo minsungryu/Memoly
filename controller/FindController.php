@@ -2,6 +2,8 @@
 session_start();
 
 require_once dirname(__DIR__).'/lib/const.php';
+require_once LIB.'Crypto.php';
+require_once LIB.'Mailer.php';
 require_once MODEL.'UserModel.php';
 require_once 'Controller.php';
 
@@ -54,18 +56,48 @@ class FindController extends Controller {
         }
 
         $nickname_len = strlen($nickname);
-        if ($nickname || $nickname_len < 2 || 16 < $nickname_len) {
+        if (!$nickname || $nickname_len < 2 || 16 < $nickname_len) {
             $this->error('잘못된 닉네임입니다.');
         }
 
         try {
+            // 본인확인
             $user = $this->user_model->confirm($email, $nickname);
 
             if (!$user || $user['is_admin'] === '1') { // 관리자는 감춘다.
                 $this->error('존재하지 않는 사용자입니다.');
             }
-    
+
+            // 임시 비밀번호 생성 후 저장
+            $random_string = Crypto::generateRandomString();
+            $sha512_string = hash('sha512', $random_string);
+            $temp_password = Crypto::hashPassword($sha512_string);
+
+            $result = $this->user_model->update($email, $nickname, null, $temp_password);
+
+            if ($result == 1) {
+                // 메일 발송
+                $this->sendMail($email, $nickname, $random_string);                
+            } else {
+                $this->error('오류가 발생했습니다.');    
+            }
+
             echo 1;
+        } catch (Exception $e) {
+            $this->error('오류가 발생했습니다.');
+        }
+    }
+
+    /**
+     *  비밀번호 찾기를 요청한 회원에게 임시 비밀번호가 담긴 메일을 발송한다.
+     */
+    function sendMail($email, $nickname, $temp_password) {
+        try {
+            $mail = new Mailer();
+            $mail->tempPassSubject($nickname);
+            $mail->tempPassBody($nickname, $temp_password);
+            $mail->to($email, $nickname);
+            $mail->send();
         } catch (Exception $e) {
             $this->error('오류가 발생했습니다.');
         }

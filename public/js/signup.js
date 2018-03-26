@@ -21,7 +21,7 @@ $("#signup-button").click(function (e) {
   var nickname = signup_form.find('#nickname').val();
   var terms = signup_form.find('#terms').val();
 
-  if (!email || !email.valid()) {
+  if (!email.val() || !email.valid()) {
     return alert('유효한 이메일을 입력해주세요.');
   }
 
@@ -43,7 +43,7 @@ $("#signup-button").click(function (e) {
   
   hidden_form.find('#hidden-email').val(email.val());
   hidden_form.find('#hidden-password').val(CryptoJS.SHA512(password).toString());
-  hidden_form.find('#hidden-password').val(CryptoJS.SHA512(password_confirm).toString());
+  hidden_form.find('#hidden-password-confirm').val(CryptoJS.SHA512(password_confirm).toString());
   hidden_form.find('#hidden-nickname').val(nickname);
   hidden_form.find('#hidden-terms').val(terms);
   hidden_form.submit();

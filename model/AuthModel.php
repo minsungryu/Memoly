@@ -28,7 +28,7 @@ class AuthModel extends Model {
      */
     function verifyEmail($token) {
         try {
-            $this->beginTransaction();
+            $this->db->beginTransaction();
 
             // 토큰이 유효한지 검사
             $statement = $this->db->prepare('SELECT user_email FROM auth WHERE token = :token');
@@ -39,7 +39,7 @@ class AuthModel extends Model {
             }
 
             $result = $statement->fetch();
-            $emali = $result['user_email'];
+            $email = $result['user_email'];
             
             if (!$email) {
                 throw new Exception('인증 정보가 없습니다.');
@@ -55,7 +55,7 @@ class AuthModel extends Model {
 
             // 회원의 인증 여부를 Y로 변경
             $statement = $this->db->prepare('UPDATE user SET is_verified = \'Y\' WHERE user_email = :email');
-            $statement->bindParam(':email', $user_email, PDO::PARAM_STR, 255);
+            $statement->bindParam(':email', $email, PDO::PARAM_STR, 255);
             
             if (!$statement->execute()) {
                 throw new Exception('오류가 발생했습니다.');
@@ -68,7 +68,7 @@ class AuthModel extends Model {
             // 토큰을 테이블에서 삭제
             $statement = $this->db->prepare('DELETE FROM auth WHERE token = :token AND user_email = :email');
             $statement->bindParam(':token', $token, PDO::PARAM_STR, 128);
-            $statement->bindParam(':email', $user_email, PDO::PARAM_STR, 255);
+            $statement->bindParam(':email', $email, PDO::PARAM_STR, 255);
             
             if (!$statement->execute()) {
                 throw new Exception("잘못된 접근입니다.");
@@ -78,10 +78,10 @@ class AuthModel extends Model {
                 throw new Exception("잘못된 접근입니다.");
             }
 
-            $this->commit();
+            $this->db->commit();
             return 1;
         } catch (Exception $e) {
-            $this->rollBack();
+            $this->db->rollBack();
             return 0;
         }
     }

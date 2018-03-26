@@ -124,7 +124,7 @@ $("#edit").click(function (e) {
     var password = edit_form.find('#password').val();
     var nickname = edit_form.find('#nickname').val();
 
-    if (!email || !email.valid()) {
+    if (!email.val() || !email.valid()) {
         return alert('유효한 이메일을 입력해주세요.');
     }
 
@@ -180,7 +180,7 @@ $("#leave").click(function (event) {
     var password = edit_form.find('#password').val();
     var nickname = edit_form.find('#nickname').val();
 
-    if (!email || !email.valid()) {
+    if (!email.val() || !email.valid()) {
         return alert('유효한 이메일을 입력해주세요.');
     }
 

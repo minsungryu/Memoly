@@ -75,7 +75,7 @@ class SignUpController extends Controller {
         }
 
         $nickname_len = strlen($nickname);
-        if ($nickname || $nickname_len < 2 || 16 < $nickname_len) {
+        if (!$nickname || $nickname_len < 2 || 16 < $nickname_len) {
             $this->error('잘못된 닉네임입니다.');
         }
 
@@ -124,8 +124,8 @@ class SignUpController extends Controller {
     function sendMail($email, $nickname, $token) {
         try {
             $mail = new Mailer();
-            $mail->subject($nickname);
-            $mail->body($nickname, SERVER_HOST.'signup.php?token='.urlencode($token));
+            $mail->verifySubject($nickname);
+            $mail->verifyBody($nickname, SERVER_HOST.'signup.php?token='.urlencode($token));
             $mail->to($email, $nickname);
             $mail->send();
         } catch (Exception $e) {
