@@ -64,7 +64,7 @@ $('#form-hidden').submit(function (e) {
         alert('회원가입을 축하합니다! 로그인 페이지로 이동합니다.');
         window.location.href = '/signin.php';
       } else {
-        alert('로그인에 실패했습니다.');
+        alert('회원가입에 실패했습니다.');
       }
     },
     error: function (err) {
