@@ -166,7 +166,7 @@ class UserModel extends Model {
 
     /**
      * [관리자 모드]
-     * countAll - 관리자를 제외하고 조건에 맞는 회원 수를 계산한다.
+     * 관리자를 제외하고 조건에 맞는 회원 수를 계산한다.
      */
     function count($option = null) {
         $email_word = $option['이메일'] ? $option['이메일'].'%' : null;
@@ -178,6 +178,22 @@ class UserModel extends Model {
 
         if ($statement->execute()) {
             return $statement->fetchColumn(0);
+        } else {
+            // throw
+        }
+    }
+
+    /**
+     * [관리자 모드]
+     * 여러 회원을 삭제한다.
+     */
+    function multipleDelete($user_emails) {
+        $emails_string = implode(',', $user_emails);
+        $statement = $this->db->prepare('DELETE FROM user WHERE FIND_IN_SET(user_email, :emails_string) AND is_admin <> 1');
+        $statement->bindParam(':emails_string', $emails_string);
+
+        if ($statement->execute()) {
+            return $statement->rowCount();
         } else {
             // throw
         }

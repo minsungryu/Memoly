@@ -36,6 +36,8 @@ class AdminController extends BoardController {
         $this->header();
         $this->adminView();
         $this->footer();
+        $option = ['script' => [JS.'admin.js']];
+        $this->appendScript($option);
         $this->documentFoot();
     }
 
@@ -70,11 +72,26 @@ class AdminController extends BoardController {
         $show_len = min(5, strlen($id));
         $email[0] = substr($id, 0, $show_len).'*****';
         return implode('@', $email);
-    }    
+    }
+
+    function deleteChecked($user_emails) {
+        try {
+            $result = $this->user_model->multipleDelete($user_emails);
+
+            if ($result == 0) {
+                $this->error('삭제된 회원이 없습니다.');
+            }
+            
+            echo $result;
+        } catch (Exception $e) {
+            $this->error('오류가 발생했습니다.');
+        }
+    }
 
     /**
      * 컨트롤러 소멸시
      * HTTP METHOD가 GET이면 -> 모델을 통해 조건에 맞는 데이터를 받아오고 render를 호출하여 화면을 출력한다.
+     * HTTP METHOD가 DELETE이면 -> 선택한 회원을 삭제한다.(AJAX - 화면 호출하지 않음)
      * 이외의 요청에 대해서는 비정상 접근으로 간주하고 종료한다.
      */
     function __destruct() {
@@ -91,6 +108,11 @@ class AdminController extends BoardController {
 
             $this->searchUser($option, $search, $this->current_page);
             parent::__destruct();   // render
+        } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            parse_str(file_get_contents("php://input"), $_DELETE);
+            $user_emails = $_DELETE['user_emails'];
+            $this->deleteChecked($user_emails);
+            exit;
         } else {
             exit;
         }

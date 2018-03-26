@@ -1,7 +1,7 @@
 <div class="container">
     <h1 class="text-center m-5">회원 목록</h1>
     <ul class="nav justify-content-between">
-        <button class="btn btn-primary">선택삭제</button>
+        <button type="button" id="delete-button" class="btn btn-primary">선택삭제</button>
         <form action="admin.php" method="get" class="form-inline">
             <select class="form-control mr-2" name="option">
                 <option>이메일</option>
@@ -14,10 +14,10 @@
     <?php if ($this->item_count == 0): ?>
         <p class="mt-5 text-center">검색결과가 없습니다.
     <?php else: ?>
-    <table class="table table-striped table-hover mt-3">
+    <table id="user-table" class="table table-striped table-hover mt-3">
         <thead>
             <tr>
-                <th scope="col" class="text-center"><input type="checkbox"></th>
+                <th scope="col" class="text-center"><input type="checkbox" id="check-all"></th>
                 <th scope="col" class="text-center">이메일</th>
                 <th scope="col" class="text-center">닉네임</th>
                 <th scope="col" class="text-center">가입일자</th>
@@ -32,7 +32,7 @@
                 for ($i = 0; $i < $end; $i++):
             ?>
             <tr>
-                <td class="text-center"><input type="checkbox"></td>
+                <td class="text-center"><input type="checkbox" data-email="<?= $this->user_list[$i]['user_email'] ?>"></td>
                 <td class="text-center"><a href="<?= 'edit.php?user-no='.$this->user_list[$i]['user_no'] ?>"><?= $this->hideEmail($this->user_list[$i]['user_email']) ?></a></td>
                 <td class="text-center"><?= $this->user_list[$i]['user_nickname'] ?></td>
                 <td class="text-center"><?= $this->user_list[$i]['signup_date'] ?></td>
