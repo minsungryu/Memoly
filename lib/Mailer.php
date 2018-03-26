@@ -18,6 +18,9 @@ class Mailer {
     function __construct() {
         $this->mail = new PHPMailer();
 
+        $this->mail->CharSet = 'EUC-KR';
+        $this->mail->Encoding = 'base64';
+
         $this->mail->isSMTP();                                      // SMTP 설정
         $this->mail->Host = 'smtp.gmail.com';                       // gmail 사용
         $this->mail->SMTPAuth = true;
@@ -36,6 +39,7 @@ class Mailer {
      */
     function verifySubject($nickname) {
         $this->mail->Subject = '[Memoly] '.$nickname.'님의 가입을 축하합니다!';
+        $this->mail->Subject = $this->encodingSubject($this->mail->Subject);
     }
 
     /**
@@ -59,6 +63,7 @@ class Mailer {
      */
     function tempPassSubject($nickname) {
         $this->mail->Subject = '[Memoly] '.$nickname.'님, 임시 비밀번호를 발급해드립니다.';
+        $this->mail->Subject = $this->encodingSubject($this->mail->Subject);
     }
 
     /**
@@ -89,6 +94,13 @@ class Mailer {
      */
     function send() {
         $this->mail->send();
+    }
+
+    /**
+     * 메일 제목 한글 인코딩
+     */
+    function encodingSubject($text) {
+        return '=?EUC-KR?B?'.base64_encode(iconv('utf-8', 'euc-kr', $text)).'?=';
     }
 
     /**
