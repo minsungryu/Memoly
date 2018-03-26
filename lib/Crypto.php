@@ -11,7 +11,7 @@ $dotenv->load();
  */
 final class Crypto {
 
-    private const cipher_alias = 'AES256';
+    private static $cipher_alias = 'AES256';
 
     private function __construct() { }
 
