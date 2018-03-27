@@ -31,7 +31,9 @@
         data-memo-created="<?= $this->memo_list[$i]['memo_created'] ?>"
         data-memo-modified="<?= $this->memo_list[$i]['memo_modified'] ?>"
         data-target="#memo-modal">
-        <div class="card-header"><?= $this->memo_list[$i]['memo_title'] ?></div>
+        <div class="card-header">
+          <?= $this->memo_list[$i]['memo_title'] ?>
+        </div>
         <div class="card-body text-secondary">
           <p class="card-text"><?= $this->memo_list[$i]['memo_content'] ?></p>
         </div>

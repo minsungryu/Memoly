@@ -34,11 +34,18 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                 var add_memo_content = encodeURIComponent($('.modal-body textarea').val());
 
                 if (add_memo_title.length > 255) {
-                    return alert('제목은 255자를 초과할 수 없습니다.');
+                    alert('제목은 255자를 초과할 수 없습니다.');
+                    var title_area = $('.modal-title').val();
+                    $('.modal-title').val(title_area.substr(0,255));
+                    return;
                 }
 
                 if (add_memo_content.length > 1000) {
-                    return alert('메모는 1000자를 초과할 수 없습니다.');
+                    alert('메모는 1000자를 초과할 수 없습니다.');
+                    var text_area = $('.modal-body textarea').val();
+                    $('.modal-body textarea').val(text_area.substr(0,1000));
+                    $('.modal-body textarea').trigger('input');
+                    return;
                 }
 
                 $.ajax({
@@ -89,11 +96,18 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                     var modified_memo_content = encodeURIComponent($('.modal-body textarea').val());
 
                     if (modified_memo_title.length > 255) {
-                        return alert('제목은 255자를 초과할 수 없습니다.');
+                        alert('제목은 255자를 초과할 수 없습니다.');
+                        var title_area = $('.modal-title').val();
+                        $('.modal-title').val(title_area.substr(0,255));
+                        return;
                     }
     
                     if (modified_memo_content.length > 1000) {
-                        return alert('메모는 1000자를 초과할 수 없습니다.');
+                        alert('메모는 1000자를 초과할 수 없습니다.');
+                        var text_area = $('.modal-body textarea').val();
+                        $('.modal-body textarea').val(text_area.substr(0,1000));
+                        $('.modal-body textarea').trigger('input');
+                        return;
                     }
                 
                     $.ajax({
@@ -125,6 +139,7 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                 if (($('.modal-title').val() !== memo_title || $('.modal-body textarea').val() !== memo_content) && confirm('변경된 내용이 사라집니다. 계속하시겠습니까?')) {
                     $('.modal-title').val(memo_title);
                     $('.modal-body textarea').val(memo_content);
+                    $('.modal-body textarea').trigger('input');
                 }
                 changeWriteButton();
             } else if (mode === '삭제') {

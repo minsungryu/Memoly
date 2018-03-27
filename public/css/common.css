@@ -10,6 +10,12 @@ footer {
     background-color: #f5f5f5;
 }
 
+div, p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .btn-primary {
     background-color: #e42956;
     border-color: #e42956;
