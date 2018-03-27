@@ -51,7 +51,7 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                 $.ajax({
                     url: './memo.php',
                     type: 'post',
-                    data: 'memo_user=' + memo_user + '&memo_title=' + add_memo_title + '&memo_content=' + add_memo_content,
+                    data: 'action=ADD&memo_user=' + memo_user + '&memo_title=' + add_memo_title + '&memo_content=' + add_memo_content,
                     success: function(post) {
                         if (post) {
                             alert('저장되었습니다!');
@@ -112,8 +112,9 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                 
                     $.ajax({
                         url: './memo.php',
-                        type: 'put',
-                        data: 'memo_id='+ memo_id +'&memo_user=' + memo_user + '&memo_title=' + modified_memo_title + '&memo_content=' + modified_memo_content,
+                        // type: 'put',
+                        type: 'post',
+                        data: 'action=PUT&memo_id='+ memo_id +'&memo_user=' + memo_user + '&memo_title=' + modified_memo_title + '&memo_content=' + modified_memo_content,
                         success: function(put) {
                             if (put) {
                                 alert('수정되었습니다!');
@@ -146,8 +147,9 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                 if (confirm('정말로 삭제하시겠습니까?')) {
                     $.ajax({
                         url: './memo.php',
-                        type: 'delete',
-                        data: 'memo_id='+ memo_id +'&memo_user=' + memo_user,
+                        type: 'post',
+                        // type: 'delete',
+                        data: 'action=DELETE&memo_id=' + memo_id +'&memo_user=' + memo_user,
                         success: function(del) {
                             if (del) {
                                 alert('삭제되었습니다!');

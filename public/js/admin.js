@@ -12,7 +12,7 @@ $('#delete-button').click(function() {
 
     $.ajax({
         url: './admin.php',
-        type: 'delete',
+        type: 'post',
         data: $.param(user_emails),
         success: function (result) {
             if (result != '0') {

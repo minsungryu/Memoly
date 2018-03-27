@@ -112,9 +112,9 @@ class AdminController extends BoardController {
 
             $this->searchUser($option, $search, $this->current_page);
             parent::__destruct();   // render
-        } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-            parse_str(file_get_contents("php://input"), $_DELETE);
-            $user_emails = $_DELETE['user_emails'];
+        } else if ($_SERVER['REQUEST_METHOD'] === 'POST') { // as DELETE
+            // parse_str(file_get_contents("php://input"), $_DELETE);
+            $user_emails = $_POST['user_emails'];
             $this->deleteChecked($user_emails);
             exit;
         } else {

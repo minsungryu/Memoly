@@ -136,37 +136,25 @@ class MemoController extends BoardController {
             $this->searchMemo($option, $search, $this->current_page);
             parent::__destruct();   // render
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $action = $_POST['action'];
+
+            $memo_id = $_POST['memo_id'];
             $memo_user = $_POST['memo_user'];
-            if ($_SESSION['user_email'] === $memo_user) {
-                $memo_title = $_POST['memo_title'];
-                $memo_content = $_POST['memo_content'];
+            $memo_title = $_POST['memo_title'];
+            $memo_content = $_POST['memo_content'];
+                
+            if ($_SESSION['user_email'] !== $memo_user) {
+                $this->error('비정상적인 접근입니다.');
+                exit;
+            }
+
+            if ($action === 'ADD') {
                 $this->addMemo($memo_title, $memo_content);
-            } else {
-                $this->alert('비정상적인 접근입니다.');
-            }
-            exit;
-        } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-            parse_str(file_get_contents("php://input"), $_PUT);
-            $memo_user = $_PUT['memo_user'];
-            if ($_SESSION['user_email'] === $memo_user) {
-                $memo_id = $_PUT['memo_id'];
-                $memo_title = $_PUT['memo_title'];
-                $memo_content = $_PUT['memo_content'];
+            } else if ($action === 'PUT') {
                 $this->updateMemo($memo_id, $memo_title, $memo_content);
-            } else {
-                $this->alert('비정상적인 접근입니다.');
-            }
-            exit;
-        } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-            parse_str(file_get_contents("php://input"), $_DELETE);
-            $memo_user = $_DELETE['memo_user'];
-            if ($_SESSION['user_email'] === $memo_user) {
-                $memo_id = $_DELETE['memo_id'];
+            } else if ($action === 'DELETE') {
                 $this->deleteMemo($memo_id);
-            } else {
-                $this->alert('비정상적인 접근입니다.');
             }
-            exit;
         }
     }
 

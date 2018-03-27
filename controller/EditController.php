@@ -178,23 +178,27 @@ class EditController extends Controller {
             $user_no = $_GET['user-no'] ?? $_SESSION['user_no'];
             $this->fetchUser($user_no);
             parent::__destruct();   // render
-        } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            exit;
-        } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-            parse_str(file_get_contents("php://input"), $_PUT);
-            $email = $_PUT['hidden-email'];
-            $nickname = $_PUT['hidden-nickname'];
-            $password = $_PUT['hidden-password'];
-            $new_password = $_PUT['hidden-new-password'];
-            $new_password_confirm = $_PUT['hidden-new-password-confirm'];
-            $this->checkEditForm($email, $nickname, $password, $new_password, $new_password_confirm);
-            exit;
-        } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-            parse_str(file_get_contents("php://input"), $_DELETE);
-            $email = $_DELETE['hidden-email'];
-            $nickname = $_DELETE['hidden-nickname'];
-            $password = $_DELETE['hidden-password'];
-            $this->checkLeaveForm($email, $nickname, $password);
+        } else if ($_SERVER['REQUEST_METHOD'] === 'POST') { // as PUT and DELETE
+            $action = $_POST['action'];
+            // if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+            if ($action === 'PUT') {
+                // parse_str(file_get_contents("php://input"), $_PUT);
+                $email = $_POST['hidden-email'];
+                $nickname = $_POST['hidden-nickname'];
+                $password = $_POST['hidden-password'];
+                $new_password = $_POST['hidden-new-password'];
+                $new_password_confirm = $_POST['hidden-new-password-confirm'];
+                $this->checkEditForm($email, $nickname, $password, $new_password, $new_password_confirm);
+                exit;
+            // } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            } else if ($action === 'DELETE') {
+                // parse_str(file_get_contents("php://input"), $_DELETE);
+                $email = $_POST['hidden-email'];
+                $nickname = $_POST['hidden-nickname'];
+                $password = $_POST['hidden-password'];
+                $this->checkLeaveForm($email, $nickname, $password);
+                exit;
+            }
             exit;
         }
     }

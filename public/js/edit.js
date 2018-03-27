@@ -1,6 +1,5 @@
 var edit_form = $('#form-edit');
 var hidden_form = $('#form-hidden');
-var action = 'put';
 
 // 현재 비밀번호와 새로운 비밀번호는 같을 수 없다는 제약조건을 정의
 $.validator.addMethod("notEqualTo", function (value, element, param) {
@@ -87,7 +86,7 @@ $('#form-hidden').submit(function (event) {
 
     $.ajax({
         url: './edit.php',
-        type: action,
+        type: 'post',
         data: $(this).serialize(),
         success: function (result) {
             if (action === 'put' && result === '1') {
@@ -114,10 +113,11 @@ $("#edit").click(function (e) {
     hidden_form.addClass('edit').removeClass('leave');
     edit_form.addClass('edit').removeClass('leave');
     edit_form.find('#password').prop('required', true);
-    action = 'put';
+    // action = 'PUT';
+    $('#action').val('PUT');
 
     // 실제로 전송될 폼은 put 메소드로 설정
-    hidden_form.prop('method', 'put');
+    // hidden_form.prop('method', 'put');
 
     // 폼 데이터 검증
     var email = edit_form.find('#email');
@@ -170,10 +170,11 @@ $("#leave").click(function (event) {
     hidden_form.addClass('leave').removeClass('edit');
     edit_form.addClass('leave').removeClass('edit');
     edit_form.find('#password').prop('required', false);
-    action = 'delete';
+    // action = 'delete';
+    $('#action').val('DELETE');
 
     // 실제로 전송될 폼은 delete 메소드로 설정
-    hidden_form.prop('method', 'delete');
+    // hidden_form.prop('method', 'delete');
 
     // 폼 데이터 검증
     var email = edit_form.find('#email');

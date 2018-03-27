@@ -30,6 +30,7 @@
     </div>
 </form>
 <form id="form-hidden" novalidate>
+    <input type="hidden" id="action" name="action">
     <input type="hidden" id="hidden-email" name="hidden-email">
     <input type="hidden" id="hidden-password" name="hidden-password">
     <input type="hidden" id="hidden-new-password" name="hidden-new-password">
