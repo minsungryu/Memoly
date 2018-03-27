@@ -65,7 +65,7 @@ class MemoController extends BoardController {
             $this->memo_list = $this->memo_model->search($_SESSION['user_email'], [$option => $search], $page, $count);
             $this->item_count = $this->memo_model->count($_SESSION['user_email'], [$option => $search]);
         } catch (Exception $e) {
-            $this->alert('데이터를 받아오는데 실패했습니다.');
+            $this->error('데이터를 받아오는데 실패했습니다.');
         }
     }
 
@@ -79,10 +79,10 @@ class MemoController extends BoardController {
             if ($result === 1) {
                 echo 1;
             } else {
-                $this->alert('메모를 추가하는데 실패했습니다.');
+                $this->error('메모를 추가하는데 실패했습니다.');
             }
         } catch (Exception $e) {
-            $this->alert('오류가 발생했습니다.');
+            $this->error('오류가 발생했습니다.');
         }
     }
 
@@ -93,10 +93,10 @@ class MemoController extends BoardController {
             if ($result === 1) {
                 echo 1;
             } else {
-                $this->alert('메모를 수정하는데 실패했습니다.');
+                $this->error('메모를 수정하는데 실패했습니다.');
             }
         } catch (Exception $e) {
-            $this->alert('오류가 발생했습니다.');
+            $this->error('오류가 발생했습니다.');
         }
     }
 
@@ -107,10 +107,10 @@ class MemoController extends BoardController {
             if ($result === 1) {
                 echo 1;
             } else {
-                $this->alert('메모를 삭제하는데 실패했습니다.');
+                $this->error('메모를 삭제하는데 실패했습니다.');
             }
         } catch (Exception $e) {
-            $this->alert('오류가 발생했습니다.');
+            $this->error('오류가 발생했습니다.');
         }
     }
 

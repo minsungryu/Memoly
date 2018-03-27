@@ -2,6 +2,7 @@
 /**
  * 자주 사용되는 상수를 정의해놓은 파일
  */
+error_reporting(0);
 
 define('ROOT', dirname(__DIR__).'/');
 

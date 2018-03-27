@@ -25,7 +25,7 @@ $("#form-find").submit(function(e) {
     e.preventDefault();
     
     $.ajax({
-        url: '/find.php',
+        url: './find.php',
         type: 'post',
         data: $(this).serialize(),
         success: function (result) {

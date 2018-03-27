@@ -42,7 +42,7 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                 }
 
                 $.ajax({
-                    url: '/memo.php',
+                    url: './memo.php',
                     type: 'post',
                     data: 'memo_user=' + memo_user + '&memo_title=' + add_memo_title + '&memo_content=' + add_memo_content,
                     success: function(post) {
@@ -53,8 +53,8 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                             alert('저장에 실패했습니다.');
                         }
                     },
-                    error: function() {
-                        alert('문제가 발생하여 저장에 실패했습니다.');
+                    error: function(err) {
+                        alert(err.responseJSON);
                     }
                 });
             }
@@ -97,7 +97,7 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                     }
                 
                     $.ajax({
-                        url: '/memo.php',
+                        url: './memo.php',
                         type: 'put',
                         data: 'memo_id='+ memo_id +'&memo_user=' + memo_user + '&memo_title=' + modified_memo_title + '&memo_content=' + modified_memo_content,
                         success: function(put) {
@@ -109,8 +109,8 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                             }
                             changeWriteButton();
                         },
-                        error: function() {
-                            alert('문제가 발생하여 수정에 실패했습니다.');
+                        error: function(err) {
+                            alert(err.responseJSON);
                             changeWriteButton();
                         }
                     });
@@ -130,7 +130,7 @@ $('#memo-modal').on('show.bs.modal', function (e) {
             } else if (mode === '삭제') {
                 if (confirm('정말로 삭제하시겠습니까?')) {
                     $.ajax({
-                        url: '/memo.php',
+                        url: './memo.php',
                         type: 'delete',
                         data: 'memo_id='+ memo_id +'&memo_user=' + memo_user,
                         success: function(del) {
@@ -141,8 +141,8 @@ $('#memo-modal').on('show.bs.modal', function (e) {
                                 alert('삭제에 실패했습니다.');
                             }
                         },
-                        error: function() {
-                            alert('문제가 발생하여 삭제에 실패했습니다.');
+                        error: function(err) {
+                            alert(err.responseJSON);
                         }
                     });
                 }

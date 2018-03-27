@@ -32,12 +32,12 @@ $('#form-hidden').submit(function (e) {
   e.preventDefault();
 
   $.ajax({
-    url: '/signin.php',
+    url: './signin.php',
     type: 'post',
     data: $(this).serialize(),
     success: function (result) {
       if (result) {
-        window.location.href = '/memo.php';
+        window.location.href = './memo.php';
       } else {
         alert('로그인에 실패했습니다.');
       }

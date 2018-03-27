@@ -86,7 +86,7 @@ $('#form-hidden').submit(function (event) {
     event.preventDefault();
 
     $.ajax({
-        url: '/edit.php',
+        url: './edit.php',
         type: action,
         data: $(this).serialize(),
         success: function (result) {

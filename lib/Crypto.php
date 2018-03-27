@@ -10,9 +10,7 @@ $dotenv->load();
  * 암복호화 및 해시 관련 클래스
  */
 final class Crypto {
-
-    private const cipher_alias = 'AES256';
-
+    
     private function __construct() { }
 
     /**
@@ -28,8 +26,8 @@ final class Crypto {
      */
     public static function encryptAES($message) {
         $aes_key = getenv('AES256_KEY');
-        if (in_array(self::cipher_alias, openssl_get_cipher_methods(true))) {
-            return openssl_encrypt($message, self::cipher_alias, $aes_key);
+        if (in_array('AES256', openssl_get_cipher_methods(true))) {
+            return openssl_encrypt($message, 'AES256', $aes_key);
         }
     }
 
@@ -38,8 +36,8 @@ final class Crypto {
      */
     public static function decryptAES($message) {
         $aes_key = getenv('AES256_KEY');
-        if (in_array(self::cipher_alias, openssl_get_cipher_methods(true))) {
-            return openssl_decrypt($message, self::cipher_alias, $aes_key);
+        if (in_array('AES256', openssl_get_cipher_methods(true))) {
+            return openssl_decrypt($message, 'AES256', $aes_key);
         }
         
     }

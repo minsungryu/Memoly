@@ -56,13 +56,13 @@ $('#form-hidden').submit(function (e) {
   e.preventDefault();
 
   $.ajax({
-    url: '/signup.php',
+    url: './signup.php',
     type: 'post',
     data: $(this).serialize(),
     success: function (result) {
       if (result) {
         alert('회원가입을 축하합니다! 로그인 페이지로 이동합니다.');
-        window.location.href = '/signin.php';
+        window.location.href = './signin.php';
       } else {
         alert('로그인에 실패했습니다.');
       }

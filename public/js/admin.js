@@ -11,7 +11,7 @@ $('#delete-button').click(function() {
     });
 
     $.ajax({
-        url: '/admin.php',
+        url: './admin.php',
         type: 'delete',
         data: $.param(user_emails),
         success: function (result) {

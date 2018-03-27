@@ -74,6 +74,10 @@ class AdminController extends BoardController {
         return implode('@', $email);
     }
 
+    /**
+     * [관리자 모드]
+     * 회원 목록에서 선택한 유저들을 일괄 삭제한다.
+     */
     function deleteChecked($user_emails) {
         try {
             $result = $this->user_model->multipleDelete($user_emails);

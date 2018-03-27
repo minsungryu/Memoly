@@ -61,7 +61,7 @@ class MemoModel extends Model {
         $content_word = $option['내용'] ? '%'.$option['내용'].'%' : null;
         $title_word = $option['제목'] ? '%'.$option['제목'].'%' : null;
 
-        $statement = $this->db->prepare('SELECT * FROM memo WHERE memo_user = :email AND (memo_content LIKE :content or :content is null) AND (memo_title LIKE :title or :title is null) ORDER BY memo_id LIMIT :start, :end');
+        $statement = $this->db->prepare('SELECT * FROM memo WHERE memo_user = :email AND (memo_content LIKE :content or :content is null) AND (memo_title LIKE :title or :title is null) ORDER BY memo_id DESC LIMIT :start, :end');
         $statement->bindParam(':email', $email, PDO::PARAM_STR, 255);
         $statement->bindParam(':content', $content_word, PDO::PARAM_STR, 1000);
         $statement->bindParam(':title', $title_word, PDO::PARAM_STR, 255);
